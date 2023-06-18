@@ -1,0 +1,21 @@
+# 使用适合您的M1芯片的基础Linux镜像
+FROM openjdk:17-jdk
+
+# 更新包列表并安装OpenJDK和Maven
+RUN yum update -y && yum install -y maven tini
+ENTRYPOINT ["tini"]
+
+# 设置工作目录
+WORKDIR /youlai-boot-master
+
+# 复制你的源代码到容器中
+COPY . .
+
+# 安装依赖
+RUN mvn install
+
+# 暴露你的应用需要的端口
+EXPOSE 8989
+
+# 启动应用
+CMD ["mvn", "spring-boot:run"]

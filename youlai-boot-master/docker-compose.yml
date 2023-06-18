@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0.33
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: youlai_boot
+      MYSQL_USER: youlai
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - "./sql/youlai_boot.sql:/docker-entrypoint-initdb.d/1.sql"
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+#  youlai-boot-master:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.dev
+#    depends_on:
+#      - mysql
+#      - redis
+#    ports:
+#      - "8989:8989"

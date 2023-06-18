@@ -1,0 +1,6 @@
+version: "3.8"
+
+services:
+  vue3-element-admin-master:
+    build: .
+    container_name: vue3-element-admin-master
