@@ -2,4 +2,4 @@ spring:
   application:
     name: youlai-boot
   profiles:
-    active: dev
+    active: prod
