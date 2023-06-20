@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youlai.system.mapper.BusAsnInfoMapper">
+
+    <!-- 用户表单信息映射 -->
+    <resultMap id="AsnInfoFormMap" type="com.youlai.system.model.bo.AsnInfoFormBO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="asnNo" column="asn_no" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="asnScnCat" column="asn_scn_cat" jdbcType="VARCHAR"/>
+        <result property="asnTechCat" column="asn_tech_cat" jdbcType="TINYINT"/>
+        <result property="asnLang" column="asn_lang" jdbcType="VARCHAR"/>
+        <result property="asnPrice" column="asn_price" jdbcType="VARCHAR"/>
+        <result property="techPortion" column="tech_portion" jdbcType="FLOAT"></result>
+        <result property="platPortion" column="plat_portion" jdbcType="FLOAT"></result>
+        <result property="asnDesc" column="asn_desc" jdbcType="VARCHAR"></result>
+        <result property="cssId" column="css_id" jdbcType="BIGINT"></result>
+        <result property="techId" column="tech_id" jdbcType="BIGINT"></result>
+        <result property="consultDt" column="consult_dt" jdbcType="DATE"></result>
+        <result property="orderDt" column="order_dt" jdbcType="DATE"></result>
+        <result property="shipDt" column="ship_dt" jdbcType="DATE"></result>
+        <result property="deliverDt" column="deliver_dt" jdbcType="DATE"></result>
+        <result property="receiveDt" column="recieve_dt" jdbcType="DATE"></result>
+        <result property="checkDt" column="check_dt" jdbcType="DATE"></result>
+        <result property="settlementDt" column="settlement_dt" jdbcType="DATE"></result>
+    </resultMap>
+
+    <!-- 根据用户ID获取用户详情 -->
+    <select id="getAsnInfoDetail" resultMap="AsnInfoFormMap">
+        SELECT
+            id
+           ,asn_no
+           ,order_no
+           ,status
+           ,asn_scn_cat
+           ,asn_tech_cat
+           ,asn_lang
+           ,asn_price
+           ,tech_portion
+           ,plat_portion
+           ,asn_desc
+           ,css_id
+           ,tech_id
+           ,consult_dt
+           ,order_dt
+           ,ship_dt
+           ,deliver_dt
+           ,receive_dt
+           ,check_dt
+           ,settlement_dt
+        FROM bus_asn_info
+        WHERE id = #{ID}
+    </select>
+
+    <!-- 获取用户导出列表 -->
+    <select id="listExportAsnInfo" resultType="com.youlai.system.model.vo.AsnInfoExportVO">
+        SELECT
+            t1.id
+            t1.asn_no,
+            t1.order_no,
+            t1.status,
+            t1.asn_scn_cat,
+            t1.asn_tech_cat,
+            t1.asn_lang,
+            t1.asn_price,
+            t1.tech_portion,
+            t1.plat_portion,
+            t1.tech_id,
+            t2.tech_name,
+            t1.css_id,
+            t3.css_name,
+            t1.consult_dt,
+            t1.order_dt,
+            t1.ship_dt,
+            t1.deliver_dt,
+            t1.receive_dt,
+            t1.check_dt,
+            t1.settlement_dt,
+            t1.update_time,
+            t1.create_time
+        FROM bus_asn_info AS t1
+        LEFT JOIN bus_tech_info t2
+        ON t1.tech_id = t2.tech_id
+        LEFT JOIN bus_css_info t3
+        ON t1.css_id = t3.css_id
+        <where>
+            <if test='keywords!=null and keywords.trim() neq ""'>
+              (t1.asn_desc LIKE CONCAT('%',#{keywords},'%')
+            </if>
+            <if test='status!=null'>
+                AND t1.status = #{status}
+            </if>
+            <if test='asnScnCat!=null'>
+                AND t1.asn_scn_cat = #{asnScnCat}
+            </if>
+            <if test='asnTechCat!=null'>
+                AND t1.asn_tech_cat = #{asnTechCat}
+            </if>
+            <if test='asnLang!=null'>
+                AND t1.asn_lang = #{asnLang}
+            </if>
+            <if test='cssId!=null'>
+                AND t1.css_id = #{cssId}
+            </if>
+            <if test='techId!=null'>
+                AND t1.tech_id = #{techId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

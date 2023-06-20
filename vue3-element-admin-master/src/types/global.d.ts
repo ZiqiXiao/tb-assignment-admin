@@ -51,5 +51,16 @@ declare global {
      */
     children?: OptionType[];
   }
+
+  interface OptionTypeString {
+	  /**
+	   * 值
+	   */
+	  value: string;
+	  /**
+	   * 文本
+	   */
+	  label: string;
+  }
 }
 export {};

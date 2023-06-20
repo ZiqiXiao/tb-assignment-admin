@@ -1,252 +1,191 @@
 <script setup lang="ts">
+import {AsnInfoQuery, AsnInfoVO} from "@/api/asn/types";
+
 defineOptions({
-  // eslint-disable-next-line vue/no-reserved-component-names
-  name: "Dashboard",
-  inheritAttrs: false,
+	name: "AsnInfo",
+	inheritAttrs: false,
 });
 
-import { useUserStore } from "@/store/modules/user";
-import { useTransition, TransitionPresets } from "@vueuse/core";
+import {getAsnInfo} from "@/api/asn";
+import {OptionTypeString} from "@/types/global";
 
-import GithubCorner from "@/components/GithubCorner/index.vue";
-import SvgIcon from "@/components/SvgIcon/index.vue";
-import BarChart from "./components/BarChart.vue";
-import PieChart from "./components/PieChart.vue";
-import RadarChart from "./components/RadarChart.vue";
+const queryFormRef = ref(ElForm);
 
-const userStore = useUserStore();
+const loading = ref(false);
+const ids = ref<number[]>([]);
+const total = ref(0);
 
-const date: Date = new Date();
-
-const greetings = computed(() => {
-  if (date.getHours() >= 6 && date.getHours() < 8) {
-    return "晨起披衣出草堂，轩窗已自喜微凉🌅！";
-  } else if (date.getHours() >= 8 && date.getHours() < 12) {
-    return "上午好🌞！";
-  } else if (date.getHours() >= 12 && date.getHours() < 18) {
-    return "下午好☕！";
-  } else if (date.getHours() >= 18 && date.getHours() < 24) {
-    return "晚上好🌃！";
-  } else if (date.getHours() >= 0 && date.getHours() < 6) {
-    return "偷偷向银河要了一把碎星，只等你闭上眼睛撒入你的梦中，晚安🌛！";
-  }
+const queryParams = reactive<AsnInfoQuery>({
+	pageNum: 1,
+	pageSize: 10,
 });
 
-const duration = 5000;
+const asnInfoList = ref<AsnInfoVO[]>();
 
-// 收入金额
-const amount = ref(0);
-const amountOutput = useTransition(amount, {
-  duration: duration,
-  transition: TransitionPresets.easeOutExpo,
-});
-amount.value = 2000;
+const asnLangOptions = ref<OptionTypeString[]>([
+	{label: 'python', value: 'python'},
+	{label: 'java', value: 'java'},
+]);
 
-// 访问数
-const visitCount = ref(0);
-const visitCountOutput = useTransition(visitCount, {
-  duration: duration,
-  transition: TransitionPresets.easeOutExpo,
-});
-visitCount.value = 2000;
+const asnTechCatOptions = ref<OptionTypeString[]>([
+	{label: '数据分析', value: '数据分析'},
+	{label: '后端', value: '后端'},
+]);
 
-//消息数
-const messageCount = ref(0);
-const messageCountOutput = useTransition(messageCount, {
-  duration: duration,
-  transition: TransitionPresets.easeOutExpo,
-});
-messageCount.value = 2000;
+const asnPriceOptions = ref<OptionType[]>([
+	{label: '0', value: 0},
+	{label: '500', value: 500},
+	{label: '1000', value: 1000},
+	{label: '2000', value: 2000},
+	{label: '5000', value: 5000},
+	{label: '10000', value: 10000},
+]);
 
-// 订单数
-const orderCount = ref(0);
-const orderCountOutput = useTransition(orderCount, {
-  duration: duration,
-  transition: TransitionPresets.easeOutExpo,
+interface CheckedRole {
+	id?: number;
+	name?: string;
+}
+let checkedRole: CheckedRole = reactive({});
+
+/**
+ * 查询
+ */
+function handleQuery() {
+	loading.value = true;
+	getAsnInfo(queryParams)
+		.then(({ data }) => {
+			asnInfoList.value = data.list;
+			total.value = data.total;
+		})
+		.finally(() => {
+			loading.value = false;
+		});
+}
+/**
+ * 重置查询
+ */
+function resetQuery() {
+	queryFormRef.value.resetFields();
+	queryParams.pageNum = 1;
+	handleQuery();
+}
+
+onMounted(() => {
+	handleQuery();
 });
-orderCount.value = 2000;
 </script>
 
 <template>
-  <div class="dashboard-container">
-    <!-- github角标 -->
-    <github-corner class="github-corner" />
+	<div class="app-container">
+		<div class="search">
+			<el-form ref="queryFormRef" :model="queryParams" :inline="true">
+				<div>
+					<el-form-item prop="keywords" label="关键字">
+						<el-input
+								v-model="queryParams.keywords"
+								placeholder="任务描述（关键字）"
+								clearable
+								@keyup.enter="handleQuery"
+						/>
+					</el-form-item>
 
-    <!-- 用户信息 -->
-    <el-row class="mb-8">
-      <el-card class="w-full">
-        <div class="flex justify-between flex-wrap">
-          <div class="flex items-center">
-            <img
-              class="user-avatar"
-              :src="userStore.avatar + '?imageView2/1/w/80/h/80'"
-            />
-            <span class="ml-[10px] text-[16px]">
-              {{ userStore.nickname }}
-            </span>
-          </div>
+					<el-form-item label="编程语言" prop="asnLang">
+						<el-select
+								v-model="queryParams.asnLang"
+								placeholder="编程语言"
+								clearable
+						>
+							<el-option
+									v-for="item in asnLangOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
 
-          <div class="leading-[40px]">
-            {{ greetings }}
-          </div>
+					<el-form-item label="技术分类" prop="asnTechCat">
+						<el-select
+								v-model="queryParams.asnTechCat"
+								placeholder="编程语言"
+								clearable
+						>
+							<el-option
+									v-for="item in asnTechCatOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</div>
 
-          <div class="space-x-2 flex items-center">
-            <el-link
-              target="_blank"
-              type="danger"
-              href="https://blog.csdn.net/u013737132/article/details/130191394"
-              >官方0到1教程</el-link
-            >
-            <el-divider direction="vertical" />
-            <el-link
-              target="_blank"
-              type="success"
-              href="https://gitee.com/youlaiorg/vue3-element-admin"
-              >Gitee源码</el-link
-            >
-            <el-divider direction="vertical" />
-            <el-link
-              target="_blank"
-              type="primary"
-              href="https://github.com/youlaitech/vue3-element-admin"
-              >GitHub源码
-            </el-link>
-          </div>
-        </div>
-      </el-card>
-    </el-row>
+				<div>
+					<el-form-item label="价格区间" prop="asnPriceLower">
+						<el-select
+								v-model="queryParams.asnPriceLower"
+								placeholder="最小值"
+								clearable
+						>
+							<el-option
+									v-for="item in asnPriceOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+						<el-select
+								v-model="queryParams.asnPriceUpper"
+								placeholder="最大值"
+								clearable
+						>
+							<el-option
+									v-for="item in asnPriceOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</div>
 
-    <!-- 数据卡片 -->
-    <el-row :gutter="40" class="mb-4">
-      <el-col :xs="24" :sm="12" :lg="6" class="mb-4">
-        <div class="data-box">
-          <div
-            class="text-[#40c9c6] hover:!text-white hover:bg-[#40c9c6] p-3 rounded"
-          >
-            <svg-icon icon-class="uv" size="3em" />
-          </div>
-          <div class="flex flex-col space-y-3">
-            <div class="text-[var(--el-text-color-secondary)]">访问数</div>
-            <div class="text-lg">
-              {{ Math.round(visitCountOutput) }}
-            </div>
-          </div>
-        </div>
-      </el-col>
 
-      <!--消息数-->
-      <el-col :xs="24" :sm="12" :lg="6" class="mb-4">
-        <div class="data-box">
-          <div
-            class="text-[#36a3f7] hover:!text-white hover:bg-[#36a3f7] p-3 rounded"
-          >
-            <svg-icon icon-class="message" size="3em" />
-          </div>
-          <div class="flex flex-col space-y-3">
-            <div class="text-[var(--el-text-color-secondary)]">消息数</div>
-            <div class="text-lg">
-              {{ Math.round(messageCountOutput) }}
-            </div>
-          </div>
-        </div>
-      </el-col>
+				<div>
+					<el-form-item>
+						<el-button type="primary" @click="handleQuery"
+						><i-ep-search />搜索</el-button
+						>
+						<el-button @click="resetQuery"><i-ep-refresh />重置</el-button>
+					</el-form-item>
+				</div>
 
-      <el-col :xs="24" :sm="12" :lg="6" class="mb-4">
-        <div class="data-box">
-          <div
-            class="text-[#f4516c] hover:!text-white hover:bg-[#f4516c] p-3 rounded"
-          >
-            <svg-icon icon-class="money" size="3em" />
-          </div>
-          <div class="flex flex-col space-y-3">
-            <div class="text-[var(--el-text-color-secondary)]">收入金额</div>
-            <div class="text-lg">
-              {{ Math.round(amountOutput) }}
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="12" :lg="6" class="mb-2">
-        <div class="data-box">
-          <div
-            class="text-[#34bfa3] hover:!text-white hover:bg-[#34bfa3] p-3 rounded"
-          >
-            <svg-icon icon-class="shopping" size="3em" />
-          </div>
-          <div class="flex flex-col space-y-3">
-            <div class="text-[var(--el-text-color-secondary)]">订单数</div>
-            <div class="text-lg">
-              {{ Math.round(orderCountOutput) }}
-            </div>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
+			</el-form>
+		</div>
 
-    <!-- Echarts 图表 -->
-    <el-row :gutter="40">
-      <el-col :sm="24" :lg="8" class="mb-4">
-        <BarChart
-          id="barChart"
-          height="400px"
-          width="100%"
-          class="bg-[var(--el-bg-color-overlay)]"
-        />
-      </el-col>
+		<el-card shadow="never">
+			<el-table
+					ref="dataTableRef"
+					v-loading="loading"
+					:data="asnInfoList"
+					highlight-current-row
+					border
+					@selection-change="handleSelectionChange"
+			>
+				<el-table-column label="任务编号" prop="asnNo" width="120" />
+		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
+				<el-table-column label="任务金额" prop="asnPrice" width="150" />
+		  	<el-table-column label="技术分类" prop="asnTechCat" width="150" />
+		  	<el-table-column label="编程语言" prop="asnLang" width="150" />
+		  	<el-table-column label="咨询时间" prop="consultDt" width="150" />
+			</el-table>
 
-      <el-col :xs="24" :sm="12" :lg="8" class="mb-4">
-        <PieChart
-          id="pieChart"
-          height="400px"
-          width="100%"
-          class="bg-[var(--el-bg-color-overlay)]"
-        />
-      </el-col>
-
-      <el-col :xs="24" :sm="12" :lg="8" class="mb-4">
-        <RadarChart
-          id="radarChart"
-          height="400px"
-          width="100%"
-          class="bg-[var(--el-bg-color-overlay)]"
-        />
-      </el-col>
-    </el-row>
-  </div>
+			<pagination
+					v-if="total > 0"
+					v-model:total="total"
+					v-model:page="queryParams.pageNum"
+					v-model:limit="queryParams.pageSize"
+					@pagination="handleQuery"
+			/>
+		</el-card>
+	</div>
 </template>
-
-<style lang="scss" scoped>
-.dashboard-container {
-  position: relative;
-  padding: 24px;
-
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-
-  .github-corner {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 99;
-    border: 0;
-  }
-
-  .data-box {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    font-weight: bold;
-    color: var(--el-text-color-regular);
-    background: var(--el-bg-color-overlay);
-    border-color: var(--el-border-color);
-    box-shadow: var(--el-box-shadow-dark);
-  }
-
-  .svg-icon {
-    fill: currentcolor !important;
-  }
-}
-</style>

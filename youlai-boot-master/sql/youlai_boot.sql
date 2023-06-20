@@ -153,6 +153,10 @@ INSERT INTO `sys_menu` VALUES (85, 6, '0,1,6', '字典数据新增', 4, '', NULL
 INSERT INTO `sys_menu` VALUES (86, 6, '0,1,6', '字典数据编辑', 4, '', NULL, 'sys:dict:edit', 1, 5, '', NULL, '2023-05-21 00:47:36', '2023-05-21 00:47:36');
 INSERT INTO `sys_menu` VALUES (87, 6, '0,1,6', '字典数据删除', 4, '', NULL, 'sys:dict:delete', 1, 6, '', NULL, '2023-05-21 00:48:10', '2023-05-21 00:48:20');
 INSERT INTO `sys_menu` VALUES (88, 2, '0,1,2', '重置密码', 4, '', NULL, 'sys:user:reset_pwd', 1, 4, '', NULL, '2023-05-21 00:49:18', '2023-05-21 00:49:18');
+INSERT INTO `sys_menu` VALUES (89, 0, '0', '任务信息展示', 2, '/asn-disp', 'Layout', NULL,1,1, 'system', NULL,'2023-06-18 22:47:53','2023-06-18 22:47:55')
+INSERT INTO `sys_menu` VALUES (89, 0, '0', '任务信息展示', 2, '/asn-disp', 'Layout', NULL,1,1, 'system', NULL,'2023-06-18 22:47:53','2023-06-18 22:47:55')
+INSERT INTO `sys_menu` VALUES (89, 0, '0', '任务信息展示', 2, 'guest', 'demo/asn-disp-guest', NULL,1,1, 'system', NULL,'2023-06-18 22:47:53','2023-06-18 22:47:55')
+
 
 -- ----------------------------
 -- Table structure for sys_role

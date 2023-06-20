@@ -7,9 +7,7 @@ import { RoleQuery, RolePageResult, RoleForm } from './types';
  *
  * @param queryParams
  */
-export function getRolePage(
-  queryParams?: RoleQuery
-): AxiosPromise<RolePageResult> {
+export function getRolePage(queryParams?: RoleQuery): AxiosPromise<RolePageResult> {
   return request({
     url: '/api/v1/roles/page',
     method: 'get',

@@ -1,7 +1,7 @@
 export default {
   // 路由国际化
   route: {
-    dashboard: '首页',
+    dashboard: '任务信息',
     document: '项目文档'
   },
   // 登录页面国际化

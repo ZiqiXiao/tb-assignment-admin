@@ -1,0 +1,491 @@
+<script setup lang="ts">
+import {AsnForm, AsnInfoOpQuery, AsnInfoOpVO, AsnInfoQuery, AsnInfoVO} from "@/api/asn/types";
+
+defineOptions({
+	name: "AsnInfoOp",
+	inheritAttrs: false,
+});
+
+import {addAsn, exportAsn, getAsnForm, getAsnInfo, getAsnInfoOp, updateAsn} from "@/api/asn";
+import {
+	asnLangOptions,
+	asnPriceOptions,
+	asnScnCatOptions,
+	asnStatusOptions,
+	asnTechCatOptions
+} from "@/utils/asnOptions";
+import {addRole, updateRole} from "@/api/role";
+
+const queryFormRef = ref(ElForm);
+const asnInfoFormRef = ref(ElForm);
+
+const loading = ref(false);
+const ids = ref<number[]>([]);
+const total = ref(0);
+
+const queryParams = reactive<AsnInfoOpQuery>({
+	pageNum: 1,
+	pageSize: 10,
+});
+
+const now = new Date()
+const currentDate = `${now.getFullYear()}-${("0" + (now.getMonth() + 1)).slice(-2)}-${("0" + now.getDate()).slice(-2)}`;
+
+const asnInfoList = ref<AsnInfoOpVO[]>();
+
+const dialog = reactive<DialogOption>({
+	visible: false,
+});
+
+const formData = reactive<AsnForm>({
+		asnNo: "tb-x-",
+		orderNo: "",
+		status: 0,
+		asnLang: "python",
+		asnScnCat: "作业",
+		asnTechCat: "数据分析",
+		asnDesc: "",
+		asnPrice: -1,
+		cssId: 10000,
+		techId: 60000,
+		consultDt: currentDate
+});
+
+const rules = reactive({
+	asnNo: [{ required: true, message: "请输内部编号", trigger: "blur" }],
+	status: [{ required: true, message: "请选择状态", trigger: "blur" }],
+	asnLang: [{ required: true, message: "请输入编程语言", trigger: "blur" }],
+});
+
+interface CheckedRole {
+	id?: number;
+	name?: string;
+}
+let checkedRole: CheckedRole = reactive({});
+
+/**
+ * 查询
+ */
+function handleQuery() {
+	loading.value = true;
+	getAsnInfoOp(queryParams)
+		.then(({ data }) => {
+			asnInfoList.value = data.list;
+			total.value = data.total;
+		})
+		.finally(() => {
+			loading.value = false;
+		});
+}
+/**
+ * 重置查询
+ */
+function resetQuery() {
+	queryFormRef.value.resetFields();
+	queryParams.pageNum = 1;
+	handleQuery();
+}
+
+/**
+ * 打开角色表单弹窗
+ *
+ * @param id
+ * @param asnNo
+ */
+function openDialog(id?: number, asnNo?: string) {
+	dialog.visible = true;
+	if (id && !asnNo) {
+		dialog.title = "修改任务";
+		getAsnForm(id).then(({ data }) => {
+			Object.assign(formData, data);
+		});
+	} else {
+		dialog.title = "新增角色";
+	}
+	if (id && asnNo) {
+	  dialog.title = "新增关联订单";
+	  getAsnForm(id).then(({ data }) => {
+		  Object.assign(formData, data);
+		  formData.id = null;
+			formData.orderNo = '';
+			formData.asnPrice = -1;
+	  });
+
+	}
+}
+
+/**
+ * 重置表单
+ */
+function resetForm() {
+	asnInfoFormRef.value.resetFields();
+	asnInfoFormRef.value.clearValidate();
+
+	formData.asnNo = "tb-x-";
+	formData.orderNo = "";
+	formData.status = 0;
+	formData.asnLang = "python";
+	formData.asnScnCat = "作业";
+	formData.asnTechCat = "数据分析";
+	formData.asnDesc = "";
+	formData.cssId = "";
+	formData.asnPrice = -1;
+	formData.cssId = 10000;
+	formData.techId = 60000;
+	formData.consultDt = currentDate
+}
+
+/**
+ * 关闭弹窗
+ */
+function closeDialog() {
+	dialog.visible = false;
+	resetForm();
+}
+/**
+ * 任务表单提交
+ */
+function handleSubmit() {
+	loading.value = true;
+	asnInfoFormRef.value.validate((valid: any) => {
+		if (valid) {
+			const id = formData.id;
+			if (id) {
+				updateAsn(id, formData)
+					.then(() => {
+						ElMessage.success("修改成功");
+						closeDialog();
+						resetQuery();
+					})
+					.finally(() => (loading.value = false));
+			} else {
+				addAsn(formData)
+					.then(() => {
+						ElMessage.success("新增成功");
+						closeDialog();
+						resetQuery();
+					})
+					.finally(() => (loading.value = false));
+			}
+		}
+	});
+}
+
+/**
+ * 导出任务数据
+ */
+function handleUserExport() {
+	exportAsn(queryParams).then((response: any) => {
+		const blob = new Blob([response.data], {
+			type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8",
+		});
+		const a = document.createElement("a");
+		const href = window.URL.createObjectURL(blob); // 下载的链接
+		a.href = href;
+		a.download = decodeURI(
+			response.headers["content-disposition"].split(";")[1].split("=")[1]
+		); // 获取后台设置的文件名称
+		document.body.appendChild(a);
+		a.click(); // 点击导出
+		document.body.removeChild(a); // 下载完成移除元素
+		window.URL.revokeObjectURL(href); // 释放掉blob对象
+	});
+}
+
+onMounted(() => {
+	handleQuery();
+});
+</script>
+
+<template>
+	<div class="app-container">
+		<div class="search">
+			<el-form ref="queryFormRef" :model="queryParams" :inline="true">
+				<div>
+					<el-form-item label="内部编号" prop="asnNo">
+						<el-input v-model="queryParams.asnNo" placeholder="内部编号" style="width: 120px"></el-input>
+					</el-form-item>
+
+					<el-form-item label="订单编号" prop="orderNo">
+						<el-input v-model="queryParams.orderNo" placeholder="订单编号" style="width: 300px"></el-input>
+					</el-form-item>
+
+					<el-form-item label="状态" prop="status">
+						<el-select
+								v-model="queryParams.status"
+								placeholder="状态"
+								clearable
+						>
+							<el-option
+									v-for="item in asnStatusOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</div>
+				<div>
+					<el-form-item label="编程语言" prop="asnLang">
+						<el-select
+								v-model="queryParams.asnLang"
+								placeholder="编程语言"
+								clearable
+						>
+							<el-option
+									v-for="item in asnLangOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+
+					<el-form-item label="技术分类" prop="asnTechCat">
+						<el-select
+								v-model="queryParams.asnTechCat"
+								placeholder="编程语言"
+								clearable
+						>
+							<el-option
+									v-for="item in asnTechCatOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</div>
+				<div>
+					<el-form-item label="价格区间" prop="asnPriceLower">
+						<el-select
+								v-model="queryParams.asnPriceLower"
+								placeholder="最小值"
+								clearable
+						>
+							<el-option
+									v-for="item in asnPriceOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+						<el-select
+								v-model="queryParams.asnPriceUpper"
+								placeholder="最大值"
+								clearable
+						>
+							<el-option
+									v-for="item in asnPriceOptions"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item prop="keywords" label="关键字">
+						<el-input
+								v-model="queryParams.keywords"
+								placeholder="任务描述（关键字）"
+								clearable
+								@keyup.enter="handleQuery"
+						/>
+					</el-form-item>
+				</div>
+
+
+				<div>
+					<el-form-item>
+						<el-button type="primary" @click="handleQuery"
+						><i-ep-search />搜索</el-button
+						>
+						<el-button @click="resetQuery"><i-ep-refresh />重置</el-button>
+					</el-form-item>
+				</div>
+
+			</el-form>
+		</div>
+
+		<el-card shadow="never">
+			<template #header>
+		  <div class="flex justify-between">
+				<div>
+					<el-button type="success" @click="openDialog()"
+					><i-ep-plus />新增</el-button
+					>
+				</div>
+				<div>
+					<el-button class="ml-3" @click="handleUserExport"
+					><template #icon><i-ep-download /></template>导出</el-button
+					>
+				</div>
+			</div>
+			</template>
+			<el-table
+					ref="dataTableRef"
+		  		v-loading="loading"
+					stripe
+					:data="asnInfoList"
+				 :default-sort = "{prop: 'asnNo', order: 'descending'}"
+			>
+		  	<el-table-column label="ID" prop="id" width="80" />
+				<el-table-column sortable label="任务编号" prop="asnNo" width="120" />
+				<el-table-column label="订单编号" prop="orderNo" width="200" />
+				<el-table-column label="状态" prop="status" width="80" />
+		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
+				<el-table-column label="任务金额" prop="asnPrice" width="100" />
+		  	<el-table-column label="平台金额" prop="platPortion" width="100" />
+		  	<el-table-column label="老师金额" prop="techPortion" width="100" />
+		  	<el-table-column label="技术分类" prop="asnTechCat" width="100" />
+		  	<el-table-column label="编程语言" prop="asnLang" width="100" />
+		  	<el-table-column label="咨询时间" prop="consultDt" width="100" />
+				<el-table-column fixed="right" label="操作" width="160">
+					<template #default="scope">
+						<el-button
+								type="primary"
+								size="small"
+								link
+								@click="openDialog(scope.row.id)"
+						>
+							<i-ep-edit />编辑
+						</el-button>
+						<el-button
+								type="primary"
+								size="small"
+								link
+								@click="openDialog(scope.row.id, scope.row.asnNo)"
+						>
+							<i-ep-edit />新增关联
+						</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+
+			<pagination
+					v-if="total > 0"
+					v-model:total="total"
+					v-model:page="queryParams.pageNum"
+					v-model:limit="queryParams.pageSize"
+					@pagination="handleQuery"
+			/>
+		</el-card>
+
+	  <!-- 角色表单弹窗 -->
+	  <el-dialog
+			  v-model="dialog.visible"
+			  :title="dialog.title"
+			  width="500px"
+			  @close="closeDialog"
+	  >
+		  <el-form
+				  ref="asnInfoFormRef"
+				  :model="formData"
+				  :rules="rules"
+				  label-width="100px"
+		  >
+			  <el-form-item label="内部编号" prop="asnNo">
+				  <el-input v-model="formData.asnNo" placeholder="请输入内部编号">
+					</el-input>
+			  </el-form-item>
+
+				<el-form-item label="订单编号" prop="orderNo">
+					<el-input v-model="formData.orderNo" placeholder="请输入订单编号" />
+				</el-form-item>
+
+		  <el-form-item label="状态" prop="status">
+				<el-select v-model="formData.status">
+					<el-option
+							v-for="item in asnStatusOptions"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+					</el-option>
+				</el-select>
+		  </el-form-item>
+
+		  <el-form-item label="编程语言" prop="asnLang">
+			  <el-select v-model="formData.asnLang">
+					<el-option
+							v-for="item in asnLangOptions"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+					</el-option>
+			  </el-select>
+		  </el-form-item>
+
+		  <el-form-item label="场景分类" prop="asnScnCat">
+			  <el-select v-model="formData.asnScnCat">
+				  <el-option
+						  v-for="item in asnScnCatOptions"
+						  :key="item.value"
+						  :label="item.label"
+						  :value="item.value">
+				  </el-option>
+			  </el-select>
+		  </el-form-item>
+
+		  <el-form-item label="技术分类" prop="asnTechCat">
+			  <el-select v-model="formData.asnTechCat">
+				  <el-option
+						  v-for="item in asnTechCatOptions"
+						  :key="item.value"
+						  :label="item.label"
+						  :value="item.value">
+				  </el-option>
+			  </el-select>
+		  </el-form-item>
+
+		  <el-form-item label="任务描述" prop="asnDesc">
+				<el-input
+						type="textarea"
+						:rows="3"
+						placeholder="请输入内容"
+						v-model="formData.asnDesc">
+				</el-input>
+		  </el-form-item>
+
+		  <el-form-item label="任务价格" prop="asnPrice">
+			  <el-input
+					  type="input"
+					  placeholder="请输入价格"
+					  v-model="formData.asnPrice">
+			  </el-input>
+		  </el-form-item>
+
+		  <el-form-item label="老师Id" prop="techId">
+			  <el-input
+					  type="input"
+					  placeholder="请输入老师Id"
+					  v-model="formData.techId">
+			  </el-input>
+		  </el-form-item>
+
+		  <el-form-item label="客服Id" prop="cssId">
+			  <el-input
+					  type="input"
+					  placeholder="请输入客服Id"
+					  v-model="formData.cssId">
+			  </el-input>
+		  </el-form-item>
+
+		  <el-form-item label="咨询日期" prop="consultDt">
+			  <el-input
+					  type="input"
+					  placeholder="formData.consultDt"
+						:disabled="true"
+					  v-model="formData.consultDt">
+			  </el-input>
+		  </el-form-item>
+
+		  </el-form>
+
+		  <template #footer>
+			  <div class="dialog-footer">
+				  <el-button type="primary" @click="handleSubmit">确 定</el-button>
+				  <el-button @click="closeDialog">取 消</el-button>
+			  </div>
+		  </template>
+	  </el-dialog>
+	</div>
+</template>
