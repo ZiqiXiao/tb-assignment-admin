@@ -1,21 +1,13 @@
 # 使用适合您的M1芯片的基础Linux镜像
 FROM openjdk:17-jdk
 
-# 更新包列表并安装OpenJDK和Maven
-RUN yum update -y && yum install -y maven tini
-ENTRYPOINT ["tini"]
+# /tmp 目录就会在运行时自动挂载为匿名卷，任何向 /tmp 中写入的信息都不会记录进容器存储层
+VOLUME /tmp
 
-# 设置工作目录
-WORKDIR /youlai-boot-master
+ADD target/youlai-boot.jar app.jar
 
-# 复制你的源代码到容器中
-COPY . .
+CMD java \
+    -Djava.security.egd=file:/dev/./urandom \
+    -jar /app.jar
 
-# 安装依赖
-RUN mvn install
-
-# 暴露你的应用需要的端口
 EXPOSE 8989
-
-# 启动应用
-CMD ["mvn", "spring-boot:run"]

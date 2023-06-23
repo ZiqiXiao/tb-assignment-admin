@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
 import { loginApi, logoutApi } from "@/api/auth";
-import { getUserInfo } from "@/api/user";
+import {getUserInfo} from "@/api/user";
 import { resetRouter } from "@/router";
 import { store } from "@/store";
 
@@ -9,6 +9,7 @@ import { LoginData } from "@/api/auth/types";
 import { UserInfo } from "@/api/user/types";
 
 import { useStorage } from "@vueuse/core";
+import {getCssCode} from "@/api/css";
 
 export const useUserStore = defineStore("user", () => {
   // state
@@ -18,6 +19,9 @@ export const useUserStore = defineStore("user", () => {
   const avatar = ref("");
   const roles = ref<Array<string>>([]); // 用户角色编码集合 → 判断路由权限
   const perms = ref<Array<string>>([]); // 用户权限编码集合 → 判断按钮权限
+  const cssCode = ref(); // 客服编码
+  const cssId = ref(); // 客服ID
+
 
   /**
    * 登录调用
@@ -55,6 +59,16 @@ export const useUserStore = defineStore("user", () => {
           avatar.value = data.avatar;
           roles.value = data.roles;
           perms.value = data.perms;
+
+          // 判断是否为客服
+          if (roles.value.includes("CSS")) {
+            cssId.value = parseInt(nickname.value.split(":")[1]);
+            getCssCode(cssId.value)
+              .then(({ data }) => {
+                cssCode.value = data;
+              }
+            );
+		      }
           resolve(data);
         })
         .catch((error) => {
@@ -93,6 +107,8 @@ export const useUserStore = defineStore("user", () => {
     avatar,
     roles,
     perms,
+    cssCode,
+    cssId,
     login,
     getInfo,
     logout,

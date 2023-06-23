@@ -1,7 +1,7 @@
 /**
  * 任务信息展示查询参数
  */
-export interface AsnInfoQuery {
+export interface AsnInfoQuery extends PageQuery  {
 	keywords?: string;
 	asnTechCat?: string;
 	asnLang?: string;
@@ -12,7 +12,7 @@ export interface AsnInfoQuery {
 /**
  * 任务信息操作查询参数
  */
-export interface AsnInfoOpQuery {
+export interface AsnInfoOpQuery extends PageQuery  {
 	keywords?: string;
 	asnNo?: string;
 	orderNo?: string;
@@ -102,6 +102,10 @@ export interface AsnInfoOpVO {
  */
 export interface AsnForm {
 	/**
+	 * 主键Id
+	 */
+	id?: number;
+	/**
 	 * 内部编号
 	 */
 	asnNo?: string;
@@ -109,6 +113,10 @@ export interface AsnForm {
 	 * 订单编号
 	 */
 	orderNo: string;
+	/**
+	 * 任务描述
+	 */
+	asnDesc: string;
 	/**
 	 * 状态
 	 */
@@ -145,4 +153,8 @@ export interface AsnForm {
  	* 老师ID
 	* */
 	techId?: number;
+	/*
+ 	* 咨询日期
+	* */
+	consultDt?: string;
 }

@@ -25,9 +25,6 @@ public class AsnInfoOpPageVO {
     @Schema(description="状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)")
     private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)
 
-    @Schema(description="状态时间")
-    private Map<String, LocalDateTime> statusTime; // 状态时间
-
     @Schema(description="任务场景分类")
     private String asnScnCat; // 任务场景分类
 

@@ -67,7 +67,7 @@ public class AsnInfoForm {
     private LocalDate shipDt; // 发货日期
 
     @Schema(description="交付日期")
-    private LocalDate deliver_dt; // 交付日期
+    private LocalDate deliverDt; // 交付日期
 
     @Schema(description="收货日期")
     private LocalDate receiveDt; // 收货日期

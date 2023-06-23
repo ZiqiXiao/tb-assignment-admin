@@ -10,21 +10,25 @@ services:
       MYSQL_PASSWORD: 123456
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
+      - "./data:/var/lib/mysql"
       - "./sql/youlai_boot.sql:/docker-entrypoint-initdb.d/1.sql"
+#      - "./sql/bus_schema.sql:/docker-entrypoint-initdb.d/2.sql"
     ports:
       - "3306:3306"
 
   redis:
     image: redis:latest
+    restart: always
+    command: redis-server --requirepass 123456
     ports:
       - "6379:6379"
 
-#  youlai-boot-master:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile.dev
-#    depends_on:
-#      - mysql
-#      - redis
-#    ports:
-#      - "8989:8989"
+  youlai-boot-master:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8989:8989"

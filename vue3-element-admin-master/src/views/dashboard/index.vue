@@ -7,7 +7,7 @@ defineOptions({
 });
 
 import {getAsnInfo} from "@/api/asn";
-import {OptionTypeString} from "@/types/global";
+import {asnLangOptions, asnPriceOptions, asnTechCatOptions} from "@/utils/asnOptions";
 
 const queryFormRef = ref(ElForm);
 
@@ -21,25 +21,6 @@ const queryParams = reactive<AsnInfoQuery>({
 });
 
 const asnInfoList = ref<AsnInfoVO[]>();
-
-const asnLangOptions = ref<OptionTypeString[]>([
-	{label: 'python', value: 'python'},
-	{label: 'java', value: 'java'},
-]);
-
-const asnTechCatOptions = ref<OptionTypeString[]>([
-	{label: '数据分析', value: '数据分析'},
-	{label: '后端', value: '后端'},
-]);
-
-const asnPriceOptions = ref<OptionType[]>([
-	{label: '0', value: 0},
-	{label: '500', value: 500},
-	{label: '1000', value: 1000},
-	{label: '2000', value: 2000},
-	{label: '5000', value: 5000},
-	{label: '10000', value: 10000},
-]);
 
 interface CheckedRole {
 	id?: number;
@@ -167,9 +148,6 @@ onMounted(() => {
 					ref="dataTableRef"
 					v-loading="loading"
 					:data="asnInfoList"
-					highlight-current-row
-					border
-					@selection-change="handleSelectionChange"
 			>
 				<el-table-column label="任务编号" prop="asnNo" width="120" />
 		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />

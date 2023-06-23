@@ -7,7 +7,7 @@ import {AsnInfoVO, AsnInfoQuery, AsnForm, AsnInfoOpVO, AsnInfoOpQuery} from './t
  *
  * @param queryParams
  */
-export function getAsnInfo(queryParams?: AsnInfoQuery): AxiosPromise<AsnInfoVO[]> {
+export function getAsnInfo(queryParams?: AsnInfoQuery): AxiosPromise<PageResult<AsnInfoVO[]>> {
 	return request({
 		url: '/api/v1/asn-disp/disp',
 		method: 'get',
@@ -20,7 +20,7 @@ export function getAsnInfo(queryParams?: AsnInfoQuery): AxiosPromise<AsnInfoVO[]
  *
  * @param queryParams
  */
-export function getAsnInfoOp(queryParams?: AsnInfoOpQuery): AxiosPromise<AsnInfoOpVO[]> {
+export function getAsnInfoOp(queryParams?: AsnInfoOpQuery): AxiosPromise<PageResult<AsnInfoOpVO[]>> {
 	return request({
 		url: '/api/v1/asn-op/disp',
 		method: 'get',

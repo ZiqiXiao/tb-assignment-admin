@@ -31,6 +31,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         scss: {
           javascriptEnabled: true,
           additionalData: `
+          	@charset "UTF-8";
             @use "@/styles/variables.scss" as *;
           `,
         },

@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class MybatisPlusConfig {
 
 
-    @Value("${system.config.data-permission-enabled}")
+//    @Value("${system.config.data-permission-enabled}")
+    @Value("true")
     private Boolean dataPermissionEnabled;
 
     /**

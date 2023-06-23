@@ -7,6 +7,7 @@ export interface UserInfo {
   avatar: string;
   roles: string[];
   perms: string[];
+  cssCode?: string;
 }
 
 /**

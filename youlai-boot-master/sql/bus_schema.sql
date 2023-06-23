@@ -1,3 +1,6 @@
+use youlai_boot;
+
+SET NAMES utf8mb4;
 -- ----------------------------
 -- Table structure for bus_asn_info
 -- ----------------------------
@@ -13,7 +16,7 @@ CREATE TABLE bus_asn_info (
     asn_price float NOT NULL DEFAULT 0 COMMENT '任务金额',
     tech_portion float NOT NULL DEFAULT 0 COMMENT '老师金额',
     plat_portion float NOT NULL DEFAULT 0 COMMENT '平台金额',
-    asn_desc varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '任务描述',
+    asn_desc varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '任务描述',
     css_id bigint NOT NULL DEFAULT -1 COMMENT '客服ID',
     tech_id bigint NOT NULL DEFAULT -1 COMMENT '程序员id',
     consult_dt date NULL DEFAULT NULL COMMENT '咨询日期',
@@ -77,6 +80,3 @@ CREATE TABLE bus_tech_info (
 -- Records of bus_cus_svc_info
 -- ----------------------------
 INSERT INTO bus_tech_info VALUES (60001, '肖子奇', '18510186056', '0.80', '2019-12-06','2019-12-06','2019-12-06','2019-12-06');
-
-
-DESCRIBE bus_asn_info;

@@ -127,6 +127,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public RoleForm getRoleForm(Long roleId) {
         SysRole entity = this.getById(roleId);
+        System.out.println(entity);
         RoleForm roleForm = roleConverter.entity2Form(entity);
         return roleForm;
     }

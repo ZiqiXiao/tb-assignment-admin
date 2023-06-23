@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {AsnForm, AsnInfoOpQuery, AsnInfoOpVO, AsnInfoQuery, AsnInfoVO} from "@/api/asn/types";
+import {getMaxAsnNo} from "@/api/css";
 
 defineOptions({
 	name: "AsnInfoOp",
@@ -14,7 +14,8 @@ import {
 	asnStatusOptions,
 	asnTechCatOptions
 } from "@/utils/asnOptions";
-import {addRole, updateRole} from "@/api/role";
+import {useUserStore} from "@/store/modules/user";
+import {AsnForm, AsnInfoOpQuery, AsnInfoOpVO} from "@/api/asn/types";
 
 const queryFormRef = ref(ElForm);
 const asnInfoFormRef = ref(ElForm);
@@ -22,6 +23,12 @@ const asnInfoFormRef = ref(ElForm);
 const loading = ref(false);
 const ids = ref<number[]>([]);
 const total = ref(0);
+
+const userStore = useUserStore();
+
+const cssCode = userStore.cssCode;
+const cssId = userStore.cssId;
+const nextAsnNo = ref<string>('');
 
 const queryParams = reactive<AsnInfoOpQuery>({
 	pageNum: 1,
@@ -38,7 +45,7 @@ const dialog = reactive<DialogOption>({
 });
 
 const formData = reactive<AsnForm>({
-		asnNo: "tb-x-",
+		asnNo: "",
 		orderNo: "",
 		status: 0,
 		asnLang: "python",
@@ -100,13 +107,16 @@ function openDialog(id?: number, asnNo?: string) {
 			Object.assign(formData, data);
 		});
 	} else {
-		dialog.title = "新增角色";
+    getMaxAsnNo(cssId).then(({ data }) => {
+      formData.asnNo = 'tb-' + cssCode + '-' + String(parseInt(data.split('-')[2]) + 1);
+    });
+		dialog.title = "新增订单";
 	}
 	if (id && asnNo) {
 	  dialog.title = "新增关联订单";
 	  getAsnForm(id).then(({ data }) => {
 		  Object.assign(formData, data);
-		  formData.id = null;
+		  formData.id = undefined;
 			formData.orderNo = '';
 			formData.asnPrice = -1;
 	  });
@@ -121,14 +131,13 @@ function resetForm() {
 	asnInfoFormRef.value.resetFields();
 	asnInfoFormRef.value.clearValidate();
 
-	formData.asnNo = "tb-x-";
+	formData.asnNo = "";
 	formData.orderNo = "";
 	formData.status = 0;
 	formData.asnLang = "python";
 	formData.asnScnCat = "作业";
 	formData.asnTechCat = "数据分析";
 	formData.asnDesc = "";
-	formData.cssId = "";
 	formData.asnPrice = -1;
 	formData.cssId = 10000;
 	formData.techId = 60000;
@@ -331,11 +340,13 @@ onMounted(() => {
 		  	<el-table-column label="ID" prop="id" width="80" />
 				<el-table-column sortable label="任务编号" prop="asnNo" width="120" />
 				<el-table-column label="订单编号" prop="orderNo" width="200" />
+        <el-table-column label="客服Id" prop="cssId" width="80" />
 				<el-table-column label="状态" prop="status" width="80" />
 		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
 				<el-table-column label="任务金额" prop="asnPrice" width="100" />
 		  	<el-table-column label="平台金额" prop="platPortion" width="100" />
 		  	<el-table-column label="老师金额" prop="techPortion" width="100" />
+        <el-table-column label="老师Id" prop="techId" width="80" />
 		  	<el-table-column label="技术分类" prop="asnTechCat" width="100" />
 		  	<el-table-column label="编程语言" prop="asnLang" width="100" />
 		  	<el-table-column label="咨询时间" prop="consultDt" width="100" />

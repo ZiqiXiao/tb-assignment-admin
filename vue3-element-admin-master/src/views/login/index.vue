@@ -79,12 +79,6 @@
         @click.prevent="handleLogin"
         >{{ $t("login.login") }}
       </el-button>
-
-      <!-- 账号密码提示 -->
-      <div class="mt-4 text-white text-sm">
-        <span>{{ $t("login.username") }}: admin</span>
-        <span class="ml-4"> {{ $t("login.password") }}: 123456</span>
-      </div>
     </el-form>
   </div>
 </template>
@@ -128,8 +122,8 @@ const captchaBase64 = ref();
 const loginFormRef = ref(ElForm);
 
 const loginData = ref<LoginData>({
-  username: "admin",
-  password: "123456",
+  username: "",
+  password: "",
 });
 
 const loginRules = {
@@ -181,7 +175,7 @@ function handleLogin() {
           const query: LocationQuery = route.query;
 
           const redirect = (query.redirect as LocationQueryValue) ?? "/";
-
+          
           const otherQueryParams = Object.keys(query).reduce(
             (acc: any, cur: string) => {
               if (cur !== "redirect") {

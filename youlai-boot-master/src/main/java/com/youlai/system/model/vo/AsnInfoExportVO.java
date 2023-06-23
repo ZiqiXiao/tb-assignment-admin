@@ -65,7 +65,7 @@ public class AsnInfoExportVO {
 
     @Schema(description="交付日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate deliver_dt; // 交付日期
+    private LocalDate deliverDt; // 交付日期
 
     @Schema(description="收货日期")
     @DateTimeFormat("yyyy-MM-dd")

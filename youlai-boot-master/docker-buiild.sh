@@ -1,0 +1,1 @@
+docker buildx build --platform linux/amd64 -t ziqix/tb-admin-boot:0.1.0 . --push
