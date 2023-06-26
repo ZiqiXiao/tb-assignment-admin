@@ -41,6 +41,7 @@
     ]
   },
   "dependencies": {
+    "@soerenmartius/vue3-clipboard": "^0.1.2",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vueuse/core": "^10.1.2",
     "@wangeditor/editor": "^5.1.23",

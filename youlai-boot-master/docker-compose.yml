@@ -25,16 +25,16 @@ services:
     ports:
       - "6379:6379"
 
-  youlai-boot-master:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    environment:
-      TZ: Asia/Shanghai
-    depends_on:
-      - mysql
-      - redis
-    volumes:
-      - "./data/logs/spring-boot:/logs"
-    ports:
-      - "8989:8989"
+#  youlai-boot-master:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.dev
+#    environment:
+#      TZ: Asia/Shanghai
+#    depends_on:
+#      - mysql
+#      - redis
+#    volumes:
+#      - "./data/logs/spring-boot:/logs"
+#    ports:
+#      - "8989:8989"

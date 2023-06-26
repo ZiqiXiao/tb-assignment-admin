@@ -51,7 +51,7 @@ const formData = reactive<AsnForm>({
 		asnLang: "python",
 		asnScnCat: "作业",
 		asnTechCat: "数据分析",
-		asnDesc: "",
+		asnDesc: "任务描述:\n截止日期:",
 		asnPrice: -1,
 		cssId: cssId,
 		techId: 60000,
@@ -137,7 +137,7 @@ function resetForm() {
 	formData.asnLang = "python";
 	formData.asnScnCat = "作业";
 	formData.asnTechCat = "数据分析";
-	formData.asnDesc = "";
+	formData.asnDesc = "任务描述:\n截止日期";
 	formData.asnPrice = -1;
 	formData.cssId = 10000;
 	formData.techId = 60000;
@@ -199,6 +199,29 @@ function handleUserExport() {
 		document.body.removeChild(a); // 下载完成移除元素
 		window.URL.revokeObjectURL(href); // 释放掉blob对象
 	});
+}
+
+/*
+* 生成任务信息到剪贴板
+* */
+function generateText(row) {
+  const budget = row.asnPrice === -1 ? '报价' : row.asnPrice;
+  // 根据你的需求来生成文字
+  return `${row.asnDesc}\n编程语言：${row.asnLang}\n预算：${budget}`;
+}
+
+/*
+* 生成任务信息到剪贴板，成功提示
+* */
+function handleClipboardSuccess() {
+  ElMessageBox.alert("复制成功~请到企业微信粘贴")
+}
+
+/*
+* 生成任务信息到剪贴板，失败提示
+* */
+function handleClipboardError() {
+  ElMessageBox.alert('复制失败');
 }
 
 onMounted(() => {
@@ -350,7 +373,7 @@ onMounted(() => {
 		  	<el-table-column label="技术分类" prop="asnTechCat" width="100" />
 		  	<el-table-column label="编程语言" prop="asnLang" width="100" />
 		  	<el-table-column label="咨询时间" prop="consultDt" width="100" />
-				<el-table-column fixed="right" label="操作" width="160">
+				<el-table-column fixed="right" label="操作" width="250">
 					<template #default="scope">
 						<el-button
 								type="primary"
@@ -368,6 +391,16 @@ onMounted(() => {
 						>
 							<i-ep-edit />新增关联
 						</el-button>
+            <el-button
+                v-clipboard:copy="generateText(scope.row)"
+                v-clipboard:success="handleClipboardSuccess"
+                v-clipboard:error="handleClipboardError"
+                type="primary"
+                size="small"
+                link
+            >
+              <i-ep-edit />生成文本
+            </el-button>
 					</template>
 				</el-table-column>
 			</el-table>
