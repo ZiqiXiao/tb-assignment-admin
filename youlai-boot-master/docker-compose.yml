@@ -5,6 +5,7 @@ services:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:
+      TZ: Asia/Shanghai
       MYSQL_DATABASE: youlai_boot
       MYSQL_USER: youlai
       MYSQL_PASSWORD: 123456
@@ -12,7 +13,6 @@ services:
     volumes:
       - "./data:/var/lib/mysql"
       - "./sql/youlai_boot.sql:/docker-entrypoint-initdb.d/1.sql"
-#      - "./sql/bus_schema.sql:/docker-entrypoint-initdb.d/2.sql"
     ports:
       - "3306:3306"
 
@@ -20,6 +20,8 @@ services:
     image: redis:latest
     restart: always
     command: redis-server --requirepass 123456
+    environment:
+      TZ: Asia/Shanghai
     ports:
       - "6379:6379"
 
@@ -27,8 +29,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    environment:
+      TZ: Asia/Shanghai
     depends_on:
       - mysql
       - redis
+    volumes:
+      - "./data/logs/spring-boot:/logs"
     ports:
       - "8989:8989"

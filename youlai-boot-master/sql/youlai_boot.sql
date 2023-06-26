@@ -35,7 +35,7 @@ CREATE TABLE `sys_dept`  (
                              `create_by` bigint NULL DEFAULT NULL COMMENT '创建人ID',
                              `update_by` bigint NULL DEFAULT NULL COMMENT '修改人ID',
                              PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 171 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dept
@@ -43,8 +43,8 @@ CREATE TABLE `sys_dept`  (
 INSERT INTO `sys_dept` VALUES (1, '有来技术', 0, '0', 1, 1, 0, NULL, NULL, 1, 1);
 INSERT INTO `sys_dept` VALUES (2, '研发部门', 1, '0,1', 1, 1, 0, NULL, '2022-04-19 12:46:37', 2, 2);
 INSERT INTO `sys_dept` VALUES (3, '测试部门', 1, '0,1', 1, 1, 0, NULL, '2022-04-19 12:46:37', 2, 2);
-INSERT INTO `sys_dept` VALUES (175,'客服',1,'0,1',1,1,0,'2023-06-21 21:40:28','2023-06-21 21:40:28',NULL,NULL);
-INSERT INTO `sys_dept` VALUES (176,'游客',1,'0,1',1,1,0,'2023-06-21 21:48:38','2023-06-21 21:48:38',NULL,NULL);
+-- INSERT INTO `sys_dept` VALUES (175,'客服',1,'0,1',1,1,0,'2023-06-21 21:40:28','2023-06-21 21:40:28',NULL,NULL);
+-- INSERT INTO `sys_dept` VALUES (176,'游客',1,'0,1',1,1,0,'2023-06-21 21:48:38','2023-06-21 21:48:38',NULL,NULL);
 
 
 -- ----------------------------
@@ -304,7 +304,7 @@ CREATE TABLE `sys_user`  (
                              `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
                              PRIMARY KEY (`id`) USING BTREE,
                              UNIQUE INDEX `login_name`(`username` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 288 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
@@ -313,9 +313,9 @@ INSERT INTO `sys_user` VALUES (1, 'root', '有来技术', 0, '$2a$10$xVWsNOhHrCx
 INSERT INTO `sys_user` VALUES (2, 'admin', '系统管理员', 1, '$2a$10$xVWsNOhHrCxh5UbpCE7/HuJ.PAOKcYAqRxD2CO2nVnJS.IAXkr5aq', 1, 'https://oss.youlai.tech/youlai-boot/2023/05/16/811270ef31f548af9cffc026dfc3777b.gif', '17621210366', 1, '', 0, '2019-10-10 13:41:22', '2022-07-31 12:39:30');
 INSERT INTO `sys_user` VALUES (3, 'test', '测试小用户', 1, '$2a$10$xVWsNOhHrCxh5UbpCE7/HuJ.PAOKcYAqRxD2CO2nVnJS.IAXkr5aq', 3, 'https://oss.youlai.tech/youlai-boot/2023/05/16/811270ef31f548af9cffc026dfc3777b.gif', '17621210366', 1, 'youlaitech@163.com', 0, '2021-06-05 01:31:29', '2021-06-05 01:31:29');
 -- INSERT INTO `sys_user` VALUES (287, '123', '123', 1, '$2a$10$mVoBVqm1837huf7kcN0wS.GVYKEFv0arb7GvzfFXoTyqDlcRzT.6i', 1, '', NULL, 1, NULL, 1, '2023-05-21 14:11:19', '2023-05-21 14:11:25');
-INSERT INTO `sys_user` VALUES (289,'guest','guest',1,'$2a$10$aHrgFpG4qKbOdNBbTE5FMOwKvwPqGhyO.rjnn0.Byor141m/Y0VkC',176,'https://oss.youlai.tech/youlai-boot/2023/05/16/811270ef31f548af9cffc026dfc3777b.gif',NULL,1,NULL,0,'2023-06-21 21:48:58','2023-06-21 21:48:58');
-INSERT INTO `sys_user` VALUES (290, 'ziqix', '客服:10001', 1, '$2a$10$n8oNnS3KenrRRS4JyFPaQuKupt3NjNwPLZM.tX11yiRci0B8GUubK', 175, '', NULL, 1, NULL, 1, '2023-06-21 21:48:58', '2023-06-21 21:48:58');
-INSERT INTO `sys_user` VALUES (291, 'yunaning', '客服:10002', 1, '$2a$10$koOWujYVWG8HUWHTWOS0ae2AuyZeTs5InIZ6P02fkld0Dkq68iHim', 175, '', NULL, 1, NULL, 1, '2023-06-21 21:48:58', '2023-06-21 21:48:58');
+-- INSERT INTO `sys_user` VALUES (289,'guest','guest',1,'$2a$10$aHrgFpG4qKbOdNBbTE5FMOwKvwPqGhyO.rjnn0.Byor141m/Y0VkC',176,'https://oss.youlai.tech/youlai-boot/2023/05/16/811270ef31f548af9cffc026dfc3777b.gif',NULL,1,NULL,0,'2023-06-21 21:48:58','2023-06-21 21:48:58');
+-- INSERT INTO `sys_user` VALUES (290, 'ziqix', '客服:10001', 1, '$2a$10$n8oNnS3KenrRRS4JyFPaQuKupt3NjNwPLZM.tX11yiRci0B8GUubK', 175, '', NULL, 1, NULL, 1, '2023-06-21 21:48:58', '2023-06-21 21:48:58');
+-- INSERT INTO `sys_user` VALUES (291, 'yunaning', '客服:10002', 1, '$2a$10$koOWujYVWG8HUWHTWOS0ae2AuyZeTs5InIZ6P02fkld0Dkq68iHim', 175, '', NULL, 1, NULL, 1, '2023-06-21 21:48:58', '2023-06-21 21:48:58');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -334,9 +334,9 @@ INSERT INTO `sys_user_role` VALUES (1, 1);
 INSERT INTO `sys_user_role` VALUES (2, 2);
 INSERT INTO `sys_user_role` VALUES (3, 3);
 -- INSERT INTO `sys_user_role` VALUES (287, 2);
-INSERT INTO `sys_user_role` VALUES (289, 3);
-INSERT INTO `sys_user_role` VALUES (290, 4);
-INSERT INTO `sys_user_role` VALUES (291, 4);
+-- INSERT INTO `sys_user_role` VALUES (289, 3);
+-- INSERT INTO `sys_user_role` VALUES (290, 4);
+-- INSERT INTO `sys_user_role` VALUES (291, 4);
 -- ----------------------------
 -- Table structure for bus_asn_info
 -- ----------------------------

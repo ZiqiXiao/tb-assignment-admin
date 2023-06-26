@@ -53,7 +53,7 @@ const formData = reactive<AsnForm>({
 		asnTechCat: "数据分析",
 		asnDesc: "",
 		asnPrice: -1,
-		cssId: 10000,
+		cssId: cssId,
 		techId: 60000,
 		consultDt: currentDate
 });

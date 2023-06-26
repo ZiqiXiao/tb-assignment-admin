@@ -22,7 +22,7 @@ public class BusCssServiceImpl extends ServiceImpl<BusCssInfoMapper, BusCssInfo>
     public String getMaxAsnNo(Long cssId) {
         CssMaxAsnNoBO maxAsnNo = this.baseMapper.getMaxAsnNo(cssId);
         if (maxAsnNo == null || maxAsnNo.getAsnNo() == null) {
-            return "tb-x-100100";
+            return "tb-x-100099";
         }
         else {
             return maxAsnNo.getAsnNo();

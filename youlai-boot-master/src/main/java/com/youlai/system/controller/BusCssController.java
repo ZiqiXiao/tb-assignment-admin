@@ -1,7 +1,6 @@
 package com.youlai.system.controller;
 
 import com.youlai.system.common.result.Result;
-import com.youlai.system.model.vo.UserInfoVO;
 import com.youlai.system.service.BusCssService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

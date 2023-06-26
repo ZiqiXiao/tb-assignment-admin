@@ -19,7 +19,7 @@ export function getCssCode(cssId: number): AxiosPromise<CssCode> {
  *
  * @param cssId
  */
-export function getMaxAsnNo(cssId: number): AxiosPromise<MaxAsnNo> {
+export function getMaxAsnNo(cssId: number): AxiosPromise<String> {
   return request({
     url: '/api/v1/css/max-asn-no/' + cssId,
     method: 'get'

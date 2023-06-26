@@ -1,0 +1,1 @@
+java -Djava.secutiry.egd=file:/dev/./urandom -jar target/youlai-boot.jar
