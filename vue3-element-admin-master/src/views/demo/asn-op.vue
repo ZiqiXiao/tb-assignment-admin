@@ -204,7 +204,7 @@ function handleUserExport() {
 /*
 * 生成任务信息到剪贴板
 * */
-function generateText(row) {
+function generateText(row?: any) {
   const budget = row.asnPrice === -1 ? '报价' : row.asnPrice;
   // 根据你的需求来生成文字
   return `${row.asnDesc}\n编程语言：${row.asnLang}\n预算：${budget}`;
