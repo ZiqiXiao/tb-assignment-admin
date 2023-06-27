@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youlai.system.mapper.BusTechMapper">
+
+    <select id="getTechPage" resultType="com.youlai.system.model.bo.TechBO">
+        SELECT
+        tech_id,
+        tech_name,
+        ratio,
+        alipay,
+        entry_dt,
+        dep_dt
+        FROM bus_tech_info
+        <where>
+            <if test='queryParams.keywords!=null and queryParams.keywords.trim() neq ""'>
+                tech_name LIKE CONCAT('%',#{queryParams.keywords},'%')
+                OR tech_id LIKE CONCAT('%',#{queryParams.keywords},'%')
+                OR alipay LIKE CONCAT('%',#{queryParams.keywords},'%')
+            </if>
+            <if test='queryParams.ratio!=null'>
+                AND ratio = #{queryParams.ratio}
+            </if>
+        </where>
+    </select>
+
+</mapper>

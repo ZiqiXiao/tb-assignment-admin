@@ -49,8 +49,8 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
         Page<BusAsnInfo> asnInfoPage = this.page(
                 new Page<>(pageNum, pageSize),
                 new LambdaQueryWrapper<BusAsnInfo>()
-                        .eq(StrUtil.isNotBlank(asnNo), BusAsnInfo::getAsnNo, asnNo)
-                        .eq(StrUtil.isNotBlank(orderNo), BusAsnInfo::getOrderNo, orderNo)
+                        .like(StrUtil.isNotBlank(asnNo), BusAsnInfo::getAsnNo, asnNo)
+                        .like(StrUtil.isNotBlank(orderNo), BusAsnInfo::getOrderNo, orderNo)
                         .eq(status != null, BusAsnInfo::getStatus, status)
                         .eq(StrUtil.isNotBlank(asnScnCat), BusAsnInfo::getAsnScnCat, asnScnCat)
                         .eq(StrUtil.isNotBlank(asnTechCat), BusAsnInfo::getAsnTechCat, asnTechCat)
