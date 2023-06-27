@@ -151,7 +151,12 @@ onMounted(() => {
 			>
 				<el-table-column label="任务编号" prop="asnNo" width="120" />
 		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
-				<el-table-column label="任务金额" prop="asnPrice" width="150" />
+				<el-table-column label="任务金额" prop="asnPrice" width="150">
+          <template #default="scope">
+            <span v-if="scope.row.asnPrice == -1">报价</span>
+            <span v-else>{{ scope.row.asnPrice }}</span>
+          </template>
+        </el-table-column>
 		  	<el-table-column label="技术分类" prop="asnTechCat" width="150" />
 		  	<el-table-column label="编程语言" prop="asnLang" width="150" />
 		  	<el-table-column label="咨询时间" prop="consultDt" width="150" />

@@ -376,7 +376,12 @@ onMounted(() => {
         <el-table-column label="客服Id" prop="cssId" width="80" />
 				<el-table-column label="状态" prop="status" width="80" />
 		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
-				<el-table-column label="任务金额" prop="asnPrice" width="100" />
+				<el-table-column label="任务金额" prop="asnPrice" width="100" >
+          <template #default="scope">
+            <span v-if="scope.row.asnPrice == -1">报价</span>
+            <span v-else>{{ scope.row.asnPrice }}</span>
+          </template>
+        </el-table-column>
 		  	<el-table-column label="平台金额" prop="platPortion" width="100" />
 		  	<el-table-column label="老师金额" prop="techPortion" width="100" />
         <el-table-column label="老师Id" prop="techId" width="80" />
