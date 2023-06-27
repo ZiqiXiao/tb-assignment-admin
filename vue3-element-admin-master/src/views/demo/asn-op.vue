@@ -324,6 +324,16 @@ onMounted(() => {
 						/>
 					</el-form-item>
 				</div>
+        <div>
+          <el-form-item prop="cssId" label="客服Id">
+            <el-input
+                v-model="queryParams.cssId"
+                placeholder="客服Id"
+                clearable
+                @keyup.enter="handleQuery"
+            />
+          </el-form-item>
+        </div>
 
 
 				<div>
