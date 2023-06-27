@@ -155,9 +155,12 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
                     new LambdaQueryWrapper<BusTechInfo>()
                             .eq(BusTechInfo::getTechId, asnInfoForm.getTechId())
                             .select(BusTechInfo::getRatio));
-            if (!busTechInfo.getRatio().isNaN()) {
+            if (!busTechInfo.getRatio().isNaN() && asnInfoForm.getAsnPrice() != -1) {
                 asnInfoForm.setTechPortion(busTechInfo.getRatio() * asnInfoForm.getAsnPrice());
                 asnInfoForm.setPlatPortion(asnInfoForm.getAsnPrice() - asnInfoForm.getTechPortion());
+            } else if (asnInfoForm.getAsnPrice() == -1) {
+                asnInfoForm.setTechPortion((float) 0);
+                asnInfoForm.setPlatPortion((float) 0);
             }
         } catch (Exception e) {
             e.printStackTrace();
