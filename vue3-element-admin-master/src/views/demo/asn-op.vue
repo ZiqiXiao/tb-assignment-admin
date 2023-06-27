@@ -51,7 +51,7 @@ const formData = reactive<AsnForm>({
 		asnLang: "python",
 		asnScnCat: "作业",
 		asnTechCat: "数据分析",
-		asnDesc: "任务描述:\n截止日期:",
+		asnDesc: "任务描述：\n截止日期：",
 		asnPrice: -1,
 		cssId: cssId,
 		techId: 60000,
@@ -137,7 +137,7 @@ function resetForm() {
 	formData.asnLang = "python";
 	formData.asnScnCat = "作业";
 	formData.asnTechCat = "数据分析";
-	formData.asnDesc = "任务描述:\n截止日期";
+	formData.asnDesc = "任务描述：\n截止日期：";
 	formData.asnPrice = -1;
 	formData.cssId = 10000;
 	formData.techId = 60000;
@@ -207,7 +207,7 @@ function handleUserExport() {
 function generateText(row?: any) {
   const budget = row.asnPrice === -1 ? '报价' : row.asnPrice;
   // 根据你的需求来生成文字
-  return `${row.asnDesc}\n编程语言：${row.asnLang}\n预算：${budget}`;
+  return `${row.asnDesc}\n编程语言：${row.asnLang}\n预算：${budget}\n内部编号：${row.asnNo}`;
 }
 
 /*
