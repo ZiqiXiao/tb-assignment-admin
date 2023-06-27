@@ -139,7 +139,7 @@ function resetForm() {
 	formData.asnTechCat = "数据分析";
 	formData.asnDesc = "任务描述：\n截止日期：";
 	formData.asnPrice = -1;
-	formData.cssId = 10000;
+	formData.cssId = cssId;
 	formData.techId = 60000;
 	formData.consultDt = currentDate
 }
