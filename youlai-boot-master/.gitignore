@@ -11,3 +11,4 @@ target
 *.log
 logs
 data
+/sql/tech_list.csv
