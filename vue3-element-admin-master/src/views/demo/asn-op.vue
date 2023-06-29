@@ -383,6 +383,7 @@ onMounted(() => {
 				<el-table-column label="任务金额" prop="asnPrice" width="100" >
           <template #default="scope">
             <span v-if="scope.row.asnPrice == -1">报价</span>
+            <span v-else-if="scope.row.asnPrice == -2">详见任务描述</span>
             <span v-else>{{ scope.row.asnPrice }}</span>
           </template>
         </el-table-column>
