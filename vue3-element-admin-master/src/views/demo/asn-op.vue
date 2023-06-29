@@ -372,9 +372,13 @@ onMounted(() => {
 			>
 		  	<el-table-column label="ID" prop="id" width="80" />
 				<el-table-column sortable label="任务编号" prop="asnNo" width="120" />
-				<el-table-column label="订单编号" prop="orderNo" width="200" />
+				<el-table-column label="订单编号" prop="orderNo" width="180" />
         <el-table-column label="客服Id" prop="cssId" width="80" />
-				<el-table-column label="状态" prop="status" width="80" />
+				<el-table-column label="状态" prop="status" width="100">
+          <template #default="scope">
+             <span>{{ asnStatusOptions[scope.row.status].label }}</span>
+          </template>
+        </el-table-column>
 		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
 				<el-table-column label="任务金额" prop="asnPrice" width="100" >
           <template #default="scope">
