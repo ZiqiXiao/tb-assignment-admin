@@ -175,7 +175,7 @@ async function openDialog(techId?: number) {
   } else {
     dialog.title = "新增老师";
     getMaxTechId().then(({ data }) => {
-      formData.techId = data + 1
+      formData.techId = data + Number(1)
     })
 
   }

@@ -2,7 +2,7 @@
  * 用户查询对象类型
  */
 export interface TechQuery extends PageQuery {
-  keyword?: string; // 关键字：姓名/支付宝账号
+  keywords?: string; // 关键字：姓名/支付宝账号
   techId?: number; // 老师ID
   ratio?: number; // 老师分成比例
 }
