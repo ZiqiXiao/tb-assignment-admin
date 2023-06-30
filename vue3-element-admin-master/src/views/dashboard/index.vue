@@ -150,7 +150,11 @@ onMounted(() => {
 					:data="asnInfoList"
 			>
 				<el-table-column label="任务编号" prop="asnNo" width="120" />
-		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
+        <el-table-column label="任务描述" prop="asnDesc" min-width="320">
+          <template #default="scope">
+            <div style="white-space: pre-wrap;" v-html="scope.row.asnDesc.replace('任务描述：', '<strong>任务描述：</strong>').replace('截止日期：', '<br/><strong>截止日期：</strong>')"></div>
+          </template>
+        </el-table-column>
 				<el-table-column label="任务金额" prop="asnPrice" width="150">
           <template #default="scope">
             <span v-if="scope.row.asnPrice == -1">报价</span>

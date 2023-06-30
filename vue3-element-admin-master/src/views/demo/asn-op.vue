@@ -205,9 +205,18 @@ function handleUserExport() {
 * 生成任务信息到剪贴板
 * */
 function generateText(row?: any) {
-  const budget = row.asnPrice === -1 ? '报价' : row.asnPrice;
+  let budget = undefined;
+  if (row.asnPrice === -1) {
+    budget = '报价';
+  }
+  else if (row.asnPrice === -2) {
+    budget = '详见任务描述';
+  }
+  else {
+    budget = row.asnPrice;
+  }
   // 根据你的需求来生成文字
-  return `${row.asnDesc}\n编程语言：${row.asnLang}\n预算：${budget}\n内部编号：${row.asnNo}`;
+  return `${row.asnDesc}\n编程语言：${row.asnLang}\n任务预算：${budget}\n内部编号：${row.asnNo}`;
 }
 
 /*
@@ -379,7 +388,11 @@ onMounted(() => {
              <span>{{ asnStatusOptions[scope.row.status].label }}</span>
           </template>
         </el-table-column>
-		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320" />
+		  	<el-table-column label="任务描述" prop="asnDesc" min-width="320">
+          <template #default="scope">
+            <div style="white-space: pre-wrap;" v-html="scope.row.asnDesc.replace('任务描述：', '<strong>任务描述：</strong>').replace('截止日期：', '<br/><strong>截止日期：</strong>')"></div>
+          </template>
+        </el-table-column>
 				<el-table-column label="任务金额" prop="asnPrice" width="100" >
           <template #default="scope">
             <span v-if="scope.row.asnPrice == -1">报价</span>
