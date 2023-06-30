@@ -9,14 +9,6 @@ defineOptions({
 });
 import { UploadFile } from "element-plus";
 import {
-  deleteUsers,
-  updateUserStatus,
-} from "@/api/user";
-import { listDeptOptions } from "@/api/dept";
-import { listRoleOptions } from "@/api/role";
-
-import { UserForm, UserQuery, UserPageVO } from "@/api/user/types";
-import {
   addTech,
   exportTech,
   getMaxTechId,
@@ -28,7 +20,6 @@ import {
   deleteTechs
 } from "@/api/tech";
 
-// const deptTreeRef = ref(ElTree); // 部门树
 const queryFormRef = ref(ElForm); // 查询表单
 const techFormRef = ref(ElForm); // 老师表单
 
@@ -61,72 +52,14 @@ const rules = reactive({
   entryDt: [{ required: true, message: "入职日期不能为空", trigger: "blur" }],
 });
 
-const deptList = ref<OptionType[]>();
-const roleList = ref<OptionType[]>();
 const importDialog = reactive<DialogOption>({
   title: "用户导入",
   visible: false,
 });
-const importDeptId = ref<number>(0);
+
 const excelFile = ref<File>();
 const excelFilelist = ref<File[]>([]);
 
-// watchEffect(
-//   () => {
-//     deptTreeRef.value.filter(searchDeptName.value);
-//   },
-//   {
-//     flush: "post", // watchEffect会在DOM挂载或者更新之前就会触发，此属性控制在DOM元素更新后运行
-//   }
-// );
-
-/**
- * 部门筛选
- */
-function handleDeptFilter(value: string, data: any) {
-  if (!value) {
-    return true;
-  }
-  return data.label.indexOf(value) !== -1;
-}
-
-/**
- * 部门树节点
- */
-function handleDeptNodeClick(data: { [key: string]: any }) {
-  queryParams.deptId = data.value;
-  handleQuery();
-}
-
-/**
- * 获取角色下拉列表
- */
-async function getRoleOptions() {
-  listRoleOptions().then((response) => {
-    roleList.value = response.data;
-  });
-}
-
-/**
- * 修改用户状态
- */
-function handleStatusChange(row: { [key: string]: any }) {
-  const text = row.status === 1 ? "启用" : "停用";
-  ElMessageBox.confirm("确认要" + text + row.username + "用户吗?", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      return updateUserStatus(row.id, row.status);
-    })
-    .then(() => {
-      ElMessage.success(text + "成功");
-    })
-    .catch(() => {
-      row.status = row.status === 1 ? 0 : 1;
-    });
-}
 
 /**
  * 查询
@@ -175,7 +108,7 @@ async function openDialog(techId?: number) {
   } else {
     dialog.title = "新增老师";
     getMaxTechId().then(({ data }) => {
-      formData.techId = data + Number(1)
+      formData.techId = Number(data) + 1
     })
 
   }
@@ -254,15 +187,6 @@ function handleDelete(techId?: number) {
 }
 
 /**
- * 获取部门下拉项
- */
-async function getDeptOptions() {
-  listDeptOptions().then((response) => {
-    deptList.value = response.data;
-  });
-}
-
-/**
  * 下载导入模板
  */
 function downloadTemplate() {
@@ -287,8 +211,6 @@ function downloadTemplate() {
  * 导入弹窗
  */
 async function openImportDialog() {
-  await getDeptOptions();
-  await getRoleOptions();
   importDialog.visible = true;
 }
 
@@ -334,7 +256,7 @@ function closeImportDialog() {
 /**
  * 导出用户
  */
-function handleUserExport() {
+function handleTechExport() {
   exportTech(queryParams).then((response: any) => {
     const blob = new Blob([response.data], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8",
@@ -353,7 +275,6 @@ function handleUserExport() {
 }
 
 onMounted(() => {
-  getDeptOptions(); // 初始化部门
   handleQuery(); // 初始化用户列表数据
 });
 </script>
@@ -424,7 +345,7 @@ onMounted(() => {
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
-                <el-button class="ml-3" @click="handleUserExport"
+                <el-button class="ml-3" @click="handleTechExport"
                   ><template #icon><i-ep-download /></template>导出</el-button
                 >
               </div>
