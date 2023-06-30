@@ -57,7 +57,7 @@
     <!-- 获取用户导出列表 -->
     <select id="listExportAsnInfo" resultType="com.youlai.system.model.vo.AsnInfoExportVO">
         SELECT
-            t1.id
+            t1.id,
             t1.asn_no,
             t1.order_no,
             t1.status,

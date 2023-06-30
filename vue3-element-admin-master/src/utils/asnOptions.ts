@@ -4,6 +4,7 @@ export const asnLangOptions = ref<OptionTypeString[]>([
 	{label: 'js', value: 'js'},
 	{label: 'c', value: 'c'},
 	{label: 'c++', value: 'c++'},
+	{label: '不限', value: 'any'},
 ]);
 
 export const asnTechCatOptions = ref<OptionTypeString[]>([

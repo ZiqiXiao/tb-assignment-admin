@@ -216,7 +216,6 @@ onMounted(() => {
     <el-card shadow="never">
       <template #header>
         <el-button
-          v-hasPerm="['sys:dict_type:add']"
           type="success"
           @click="openDialog()"
           ><i-ep-plus />新增</el-button
@@ -255,7 +254,6 @@ onMounted(() => {
               ><i-ep-Collection />字典数据</el-button
             >
             <el-button
-              v-hasPerm="['sys:dict_type:edit']"
               type="primary"
               link
               size="small"
@@ -263,7 +261,6 @@ onMounted(() => {
               ><i-ep-edit />编辑</el-button
             >
             <el-button
-              v-hasPerm="['sys:dict_type:delete']"
               type="primary"
               link
               size="small"
