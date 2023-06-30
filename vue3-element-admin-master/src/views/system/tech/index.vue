@@ -37,12 +37,12 @@ const queryParams = reactive<TechQuery>({
 const techList = ref<TechPageVO[]>();
 
 const formData = reactive<TechForm>({
-  techId: null,
+  techId: undefined,
   techName: "",
-  ratio: null,
+  ratio: undefined,
   alipay: "",
-  entryDt: "",
-  depDt: ""
+  entryDt: new Date(),
+  depDt: undefined
 });
 
 const rules = reactive({
