@@ -100,6 +100,7 @@ function resetQuery() {
  * @param asnNo
  */
 function openDialog(id?: number, asnNo?: string) {
+  // resetForm();
 	dialog.visible = true;
 	if (id && !asnNo) {
 		dialog.title = "修改任务";
@@ -142,6 +143,7 @@ function resetForm() {
 	formData.cssId = cssId;
 	formData.techId = 60000;
 	formData.consultDt = currentDate
+  formData.id = undefined;
 }
 
 /**
@@ -447,7 +449,7 @@ onMounted(() => {
 			/>
 		</el-card>
 
-	  <!-- 角色表单弹窗 -->
+	  <!-- 任务表单弹窗 -->
 	  <el-dialog
 			  v-model="dialog.visible"
 			  :title="dialog.title"
