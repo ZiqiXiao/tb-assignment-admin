@@ -54,9 +54,12 @@ const formData = reactive<AsnForm>({
 		asnPrice: -1,
 		cssId: cssId,
 		techId: 60000,
+		consultDt: currentDate,
+    orderDt: undefined,
+    shipDt: undefined,
+    receiveDt: undefined,
     checkDt: undefined,
     settlementDt: undefined,
-		consultDt: currentDate
 });
 
 const rules = reactive({
@@ -65,9 +68,9 @@ const rules = reactive({
 	asnLang: [{ required: true, message: "请输入编程语言", trigger: "blur" }],
   orderNo: [
     {
-      validator: (rule, value, callback) => {
+      validator: (rule?: any, value?: any, callback?: any) => {
         const specialStatusValues = [2, 3, 4, 5, 6, 7];
-        if (specialStatusValues.includes(formData.status) && !value) {
+        if (formData.status !== undefined && specialStatusValues.includes(formData.status) && !value) {
           callback(new Error('订单号不能为空'));
         } else {
           callback();
@@ -157,7 +160,10 @@ function resetForm() {
 	formData.asnPrice = -1;
 	formData.cssId = cssId;
 	formData.techId = 60000;
-	formData.consultDt = currentDate
+	formData.consultDt = currentDate;
+  formData.orderDt = undefined;
+  formData.shipDt = undefined;
+  formData.receiveDt = undefined;
   formData.checkDt = undefined;
   formData.settlementDt = undefined;
   formData.id = undefined;

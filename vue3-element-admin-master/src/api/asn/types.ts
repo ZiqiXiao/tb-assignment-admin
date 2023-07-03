@@ -203,5 +203,25 @@ export interface AsnForm {
 	/*
  	* 咨询日期
 	* */
+	orderDt?: string;
+	/**
+	 * 发货日期
+	 */
+	shipDt?: string;
+	/**
+	 * 收货日期
+	 */
+	receiveDt?: string;
+	/**
+	 * 核对日期
+	 */
+	checkDt?: string;
+	/**
+	 * 结算日期
+	 */
+	settlementDt?: string;
+	/**
+	 * 咨询日期
+	 */
 	consultDt?: string;
 }
