@@ -461,6 +461,7 @@ onMounted(() => {
 					ref="dataTableRef"
 		  		v-loading="loading"
 					stripe
+          height="800"
 					:data="asnInfoList"
 				 :default-sort = "{prop: 'asnNo', order: 'descending'}"
 			>
