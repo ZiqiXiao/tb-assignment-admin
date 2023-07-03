@@ -72,6 +72,8 @@ const rules = reactive({
         const specialStatusValues = [2, 3, 4, 5, 6, 7];
         if (formData.status !== undefined && specialStatusValues.includes(formData.status) && !value) {
           callback(new Error('订单号不能为空'));
+        } else if (value && value.includes('，')) {
+          callback(new Error('请使用英文逗号'));
         } else {
           callback();
         }
@@ -527,7 +529,7 @@ onMounted(() => {
 			  </el-form-item>
 
 				<el-form-item label="订单编号" prop="orderNo">
-					<el-input v-model="formData.orderNo" placeholder="请输入订单编号" />
+					<el-input v-model="formData.orderNo" placeholder="请输入订单编号以英文逗号分割" />
 				</el-form-item>
 
 		  <el-form-item label="状态" prop="status">

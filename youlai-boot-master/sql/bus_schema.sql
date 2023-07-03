@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS bus_asn_info;
 CREATE TABLE bus_asn_info (
     id bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
     asn_no varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '内部编号',
-    order_no varchar(19) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '淘宝订单号',
+    order_no varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '淘宝订单号',
     status tinyint NOT NULL DEFAULT 1 COMMENT '状态(0:未匹配;1:未下单;2:预付款;3:已发货;4:已收货;5:已核对;6:已结算;7.已退款;8.已流失;)',
     asn_scn_cat varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '任务场景分类',
     asn_tech_cat varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '任务技术分类',
