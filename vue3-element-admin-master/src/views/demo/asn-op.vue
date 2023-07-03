@@ -465,8 +465,8 @@ onMounted(() => {
 					:data="asnInfoList"
 				 :default-sort = "{prop: 'asnNo', order: 'descending'}"
 			>
-		  	<el-table-column label="ID" prop="id" width="80" />
-				<el-table-column sortable label="任务编号" prop="asnNo" width="120" />
+<!--		  	<el-table-column fixed label="ID" prop="id" width="80" />-->
+				<el-table-column fixed sortable label="任务编号" prop="asnNo" width="120" />
 				<el-table-column label="订单编号" prop="orderNo" width="180" />
         <el-table-column label="客服Id" prop="cssId" width="80" />
 				<el-table-column label="状态" prop="status" width="100">
