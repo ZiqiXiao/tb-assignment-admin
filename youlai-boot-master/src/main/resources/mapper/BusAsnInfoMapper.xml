@@ -167,7 +167,7 @@
                 AND t1.settlement_dt = #{queryParams.settlementDt}
             </if>
         </where>
-        order by t1.status asc, t1.consult_dt desc
+        order by t1.status asc, t1.consult_dt desc, t1.id desc
     </select>
 
 </mapper>
