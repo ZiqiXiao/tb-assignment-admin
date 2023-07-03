@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.youlai.system.common.exception.BusinessException;
 import com.youlai.system.converter.AsnInfoOpConverter;
 import com.youlai.system.mapper.BusAsnInfoMapper;
 import com.youlai.system.model.bo.AsnInfoFormBO;
@@ -39,15 +40,10 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
         // 查询参数
         int pageNum = queryParams.getPageNum();
         int pageSize = queryParams.getPageSize();
-        try {
-            Page<AsnInfoOpPageVO> asnInfoPage = this.baseMapper.asnInfoPage(new Page<>(pageNum, pageSize), queryParams);
-            System.out.println(asnInfoPage);
+        Page<AsnInfoOpPageVO> asnInfoPage = this.baseMapper.asnInfoPage(new Page<>(pageNum, pageSize), queryParams);
+        System.out.println(asnInfoPage);
 
-            return asnInfoPage;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return asnInfoPage;
     }
 
     /**
@@ -120,22 +116,30 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
             if (busAsnInfo.getOrderNo()==null && asnInfoForm.getOrderNo()!=null){
                 asnInfoForm.setOrderDt(currentDate);
             }
-        } else {
-            if (busAsnInfo.getOrderNo()==null && asnInfoForm.getOrderNo()!=null){
-                asnInfoForm.setOrderDt(currentDate);
-            };
-            if (busAsnInfo.getShipDt()==null && Objects.equals(targetStatus, 3)) {
-                asnInfoForm.setShipDt(currentDate);
-            };
-            if (busAsnInfo.getReceiveDt()==null && Objects.equals(targetStatus, 4)) {
-                asnInfoForm.setReceiveDt(currentDate);
-                // 计算下个周二的日期并填入核对日期内
-                LocalDate checkDate = currentDate.with(TemporalAdjusters.next(DayOfWeek.TUESDAY));
-                asnInfoForm.setCheckDt(checkDate);
+        }
+        if (busAsnInfo.getOrderNo()==null && asnInfoForm.getOrderNo()!=null){
+            asnInfoForm.setOrderDt(currentDate);
+        };
+        if (busAsnInfo.getShipDt()==null && Objects.equals(targetStatus, 3)) {
+            asnInfoForm.setShipDt(currentDate);
+        };
+        if (busAsnInfo.getReceiveDt()==null && Objects.equals(targetStatus, 4)) {
+            if (busAsnInfo.getOrderNo()==null || busAsnInfo.getShipDt()==null){
+                throw new BusinessException("请先完成发货操作");
             }
-            if (busAsnInfo.getSettlementDt()==null && Objects.equals(targetStatus, 6)) {
-                asnInfoForm.setSettlementDt(currentDate);
+            asnInfoForm.setReceiveDt(currentDate);
+            // 计算下个周二的日期并填入核对日期内
+            LocalDate checkDate = currentDate.with(TemporalAdjusters.next(DayOfWeek.TUESDAY));
+            asnInfoForm.setCheckDt(checkDate);
+        }
+        if (busAsnInfo.getCheckDt()==null && Objects.equals(targetStatus, 5)) {
+                throw new BusinessException("请先完成收货操作");
+        }
+        if (busAsnInfo.getSettlementDt()==null && Objects.equals(targetStatus, 6)) {
+            if (busAsnInfo.getCheckDt()==null){
+                throw new BusinessException("请先完成核对操作");
             }
+            asnInfoForm.setSettlementDt(currentDate);
         }
     }
 
