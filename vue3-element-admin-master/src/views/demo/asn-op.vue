@@ -260,6 +260,32 @@ function handleClipboardError() {
   ElMessageBox.alert('复制失败');
 }
 
+
+const shortcuts = [
+  {
+    text: '下个应结日期',
+    value: () => {
+      // 下个星期二
+      const nextTuesday = new Date();
+      const currentDay = nextTuesday.getDay();
+      const daysUntilNextTuesday = (2 - currentDay + 7) % 7 || 7;
+      nextTuesday.setDate(nextTuesday.getDate() + daysUntilNextTuesday);
+      return nextTuesday;
+    },
+  },
+  {
+    text: '上个应结日期',
+    value: () => {
+      // 上个星期二
+      const lastTuesday = new Date();
+      const currentDay = lastTuesday.getDay();
+      const daysSinceLastTuesday = (currentDay - 2 + 7) % 7 || 7;
+      lastTuesday.setDate(lastTuesday.getDate() - daysSinceLastTuesday);
+      return lastTuesday;
+    },
+  },
+]
+
 function getNextTuesday() {
   const nextTuesday = new Date();
   const currentDay = nextTuesday.getDay();
@@ -385,6 +411,7 @@ onMounted(() => {
                 clearable
                 format="YYYY年MM月DD日"
                 value-format='YYYY-MM-DD'
+                :shortcuts="shortcuts"
                 @keyup.enter="handleQuery"
             />
           </el-form-item>
@@ -396,6 +423,7 @@ onMounted(() => {
                 clearable
                 format="YYYY年MM月DD日"
                 value-format='YYYY-MM-DD'
+                :shortcuts="shortcuts"
                 @keyup.enter="handleQuery"
             />
           </el-form-item>
