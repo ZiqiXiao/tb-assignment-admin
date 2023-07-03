@@ -108,7 +108,14 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
     private void setStatusDate(AsnInfoForm asnInfoForm) {
          BusAsnInfo busAsnInfo= this.getOne(new LambdaQueryWrapper<BusAsnInfo>()
                 .eq(BusAsnInfo::getId, asnInfoForm.getId())
-                .select(BusAsnInfo::getStatus));
+                .select(
+                        BusAsnInfo::getStatus,
+                        BusAsnInfo::getOrderNo,
+                        BusAsnInfo::getShipDt,
+                        BusAsnInfo::getReceiveDt,
+                        BusAsnInfo::getCheckDt,
+                        BusAsnInfo::getSettlementDt
+                ));
         Integer currentStatus = busAsnInfo.getStatus();
         Integer targetStatus = asnInfoForm.getStatus();
         LocalDate currentDate = LocalDate.now();
@@ -124,6 +131,8 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
             asnInfoForm.setShipDt(currentDate);
         };
         if (busAsnInfo.getReceiveDt()==null && Objects.equals(targetStatus, 4)) {
+            System.out.println(busAsnInfo.getShipDt());
+            System.out.println(busAsnInfo.getOrderNo());
             if (busAsnInfo.getOrderNo()==null || busAsnInfo.getShipDt()==null){
                 throw new BusinessException("请先完成发货操作");
             }
@@ -136,7 +145,7 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
                 throw new BusinessException("请先完成收货操作");
         }
         if (busAsnInfo.getSettlementDt()==null && Objects.equals(targetStatus, 6)) {
-            if (busAsnInfo.getCheckDt()==null){
+            if (busAsnInfo.getCheckDt()==null || !Objects.equals(currentStatus, 5)){
                 throw new BusinessException("请先完成核对操作");
             }
             asnInfoForm.setSettlementDt(currentDate);
