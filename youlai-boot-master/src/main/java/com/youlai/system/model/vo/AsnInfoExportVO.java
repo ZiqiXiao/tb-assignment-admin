@@ -9,6 +9,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class AsnInfoExportVO {
@@ -22,7 +23,7 @@ public class AsnInfoExportVO {
     private String orderNo; // 订单编号
 
     @ExcelProperty(value = "状态")
-    private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;8.已退款;)
+    private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已发货;4:已收货;5:已核对;6:已结算;7.已退款;8.已流失;)
 
     @ExcelProperty(value = "任务场景分类")
     private String asnScnCat; // 任务场景分类
@@ -59,31 +60,31 @@ public class AsnInfoExportVO {
 
     @ExcelProperty(value = "咨询日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate consultDt; // 咨询日期
+    private String consultDt; // 咨询日期
 
     @ExcelProperty(value = "下单日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate orderDt; // 下单日期
+    private String orderDt; // 下单日期
 
     @ExcelProperty(value = "发货日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate shipDt; // 发货日期
+    private String shipDt; // 发货日期
 
     @ExcelProperty(value = "交付日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate deliverDt; // 交付日期
+    private String deliverDt; // 交付日期
 
     @ExcelProperty(value = "收货日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate receiveDt; // 收货日期
+    private String receiveDt; // 收货日期
 
     @ExcelProperty(value = "应结日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate checkDt; // 应结日期
+    private String checkDt; // 应结日期
 
     @ExcelProperty(value = "结算日期")
     @DateTimeFormat("yyyy-MM-dd")
-    private LocalDate settlementDt; // 结算日期
+    private String settlementDt; // 结算日期
 
     @ExcelProperty(value = "更新日期")
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")

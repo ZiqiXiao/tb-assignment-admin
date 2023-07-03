@@ -23,6 +23,9 @@ export interface AsnInfoOpQuery extends PageQuery  {
 	techId?: number;
 	asnPriceUpper?: number;
 	asnPriceLower?: number;
+	checkDt?: Date;
+	consultDt?: Date;
+	settlementDt?: Date;
 }
 
 /**
@@ -84,6 +87,30 @@ export interface AsnInfoOpVO {
 	 */
 	asnPrice?: number;
 	/**
+	 * 平台部分
+	 */
+	platPortion?: number;
+	/**
+	 * 老师部分
+	 */
+	techPortion?: number;
+	/**
+	 * 客服Id
+	 */
+	cssId?: number;
+	/**
+	 * 客服姓名
+	 */
+	cssName?: string;
+	/**
+	 * 老师Id
+	 */
+	techId?: number;
+	/**
+	 * 老师姓名
+	 */
+	techName?: string;
+	/**
 	 * 任务技术分类
 	 */
 	asnTechCat?: string;
@@ -92,9 +119,29 @@ export interface AsnInfoOpVO {
 	 */
 	asnLang?: string;
 	/**
-	 * 咨询时间
+	 * 咨询日期
 	 */
 	consultDt?: Date;
+	/**
+	 * 下单日期
+	 */
+	orderDt?: Date;
+	/**
+	 * 发货日期
+	 */
+	shipDt?: Date;
+	/**
+	 * 收货日期
+	 */
+	receiveDt?: Date;
+	/**
+	 * 核对日期
+	 */
+	checkDt?: Date;
+	/**
+	 * 结算日期
+	 */
+	settlementDt?: Date;
 }
 
 /**

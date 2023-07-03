@@ -7,6 +7,7 @@ import com.youlai.system.common.base.BaseEntity;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @TableName("bus_asn_info")
@@ -15,7 +16,7 @@ public class BusAsnInfo extends BaseEntity {
     private Long id; // 主键
     private String asnNo; // 内部编号
     private String orderNo; // 订单编号
-    private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)
+    private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已发货;4:已收货;5:已核对;6:已结算;7.已退款;8.已流失;)
     private String asnScnCat; // 任务场景分类
     private String asnTechCat; // 任务技术分类
     private String asnLang; // 编程语言
@@ -25,12 +26,12 @@ public class BusAsnInfo extends BaseEntity {
     private String asnDesc; // 任务描述
     private Long cssId; // 客服ID
     private Long techId; // 老师ID
-    private LocalDate consultDt; // 咨询日期
-    private LocalDate orderDt; // 下单日期
-    private LocalDate shipDt; // 发货日期
-    private LocalDate deliverDt; // 交付日期
-    private LocalDate receiveDt; // 收货日期
-    private LocalDate checkDt; // 应结日期
-    private LocalDate settlementDt; // 结算日期
+    private Date consultDt; // 咨询日期
+    private Date orderDt; // 下单日期
+    private Date shipDt; // 发货日期
+    private Date deliverDt; // 交付日期
+    private Date receiveDt; // 收货日期
+    private Date checkDt; // 应结日期
+    private Date settlementDt; // 结算日期
 
 }

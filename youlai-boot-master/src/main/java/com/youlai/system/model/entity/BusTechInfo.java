@@ -7,6 +7,7 @@ import com.youlai.system.common.base.BaseEntity;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @TableName("bus_tech_info")
@@ -16,7 +17,7 @@ public class BusTechInfo extends BaseEntity {
     private String techName; //
     private String alipay; //
     private Float ratio; //
-    private LocalDate entryDt; //
-    private LocalDate depDt; //
+    private Date entryDt; //
+    private Date depDt; //
 
 }

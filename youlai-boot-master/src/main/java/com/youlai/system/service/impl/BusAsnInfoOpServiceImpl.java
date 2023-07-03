@@ -20,7 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -35,52 +39,15 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
         // 查询参数
         int pageNum = queryParams.getPageNum();
         int pageSize = queryParams.getPageSize();
-        String asnNo = queryParams.getAsnNo();
-        String orderNo = queryParams.getOrderNo();
-        Integer status = queryParams.getStatus();
-        String asnScnCat = queryParams.getAsnScnCat();
-        String asnTechCat = queryParams.getAsnTechCat();
-        String asnLang = queryParams.getAsnLang();
-        String keywords = queryParams.getKeywords();
-        Long cssId = queryParams.getCssId();
-        Long techId = queryParams.getTechId();
+        try {
+            Page<AsnInfoOpPageVO> asnInfoPage = this.baseMapper.asnInfoPage(new Page<>(pageNum, pageSize), queryParams);
+            System.out.println(asnInfoPage);
 
-        // 查询数据
-        Page<BusAsnInfo> asnInfoPage = this.page(
-                new Page<>(pageNum, pageSize),
-                new LambdaQueryWrapper<BusAsnInfo>()
-                        .like(StrUtil.isNotBlank(asnNo), BusAsnInfo::getAsnNo, asnNo)
-                        .like(StrUtil.isNotBlank(orderNo), BusAsnInfo::getOrderNo, orderNo)
-                        .eq(status != null, BusAsnInfo::getStatus, status)
-                        .eq(StrUtil.isNotBlank(asnScnCat), BusAsnInfo::getAsnScnCat, asnScnCat)
-                        .eq(StrUtil.isNotBlank(asnTechCat), BusAsnInfo::getAsnTechCat, asnTechCat)
-                        .eq(StrUtil.isNotBlank(asnLang), BusAsnInfo::getAsnLang, asnLang)
-                        .like(StrUtil.isNotBlank(keywords), BusAsnInfo::getAsnNo, keywords)
-                        .eq(cssId != null, BusAsnInfo::getCssId, cssId)
-                        .eq(techId != null, BusAsnInfo::getTechId, techId)
-                        .select(
-                                BusAsnInfo::getId,
-                                BusAsnInfo::getAsnNo,
-                                BusAsnInfo::getOrderNo,
-                                BusAsnInfo::getStatus,
-                                BusAsnInfo::getAsnScnCat,
-                                BusAsnInfo::getAsnDesc,
-                                BusAsnInfo::getAsnTechCat,
-                                BusAsnInfo::getAsnLang,
-                                BusAsnInfo::getAsnPrice,
-                                BusAsnInfo::getTechPortion,
-                                BusAsnInfo::getPlatPortion,
-                                BusAsnInfo::getCssId,
-                                BusAsnInfo::getTechId,
-                                BusAsnInfo::getConsultDt,
-                                BusAsnInfo::getOrderDt,
-                                BusAsnInfo::getCheckDt,
-                                BusAsnInfo::getSettlementDt)
-        );
-
-        // 实体转换
-        Page<AsnInfoOpPageVO> pageResult = asnInfoOpConverter.entity2Page(asnInfoPage);
-        return pageResult;
+            return asnInfoPage;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -128,7 +95,11 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
     @Override
     @Transactional
     public boolean updateAsnInfo(Long id, AsnInfoForm asnInfoForm) {
+        // 计算老师和平台的金额
         calculatePortion(asnInfoForm);
+
+        // 转台转换时设置对应的时间
+        setStatusDate(asnInfoForm);
 
         // form -> entity
         BusAsnInfo entity = asnInfoOpConverter.form2Entity(asnInfoForm);
@@ -138,17 +109,39 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
         return result;
     }
 
-    @Override
-    public List<AsnInfoExportVO> listExportAsn(AsnInfoOpPageQuery queryParams) {
-        List<AsnInfoExportVO> list = this.baseMapper.listExportAsnInfo(queryParams);
-        return list;
+    private void setStatusDate(AsnInfoForm asnInfoForm) {
+         BusAsnInfo busAsnInfo= this.getOne(new LambdaQueryWrapper<BusAsnInfo>()
+                .eq(BusAsnInfo::getId, asnInfoForm.getId())
+                .select(BusAsnInfo::getStatus));
+        Integer currentStatus = busAsnInfo.getStatus();
+        Integer targetStatus = asnInfoForm.getStatus();
+        LocalDate currentDate = LocalDate.now();
+        if (Objects.equals(currentStatus, targetStatus)) {
+            if (busAsnInfo.getOrderNo()==null && asnInfoForm.getOrderNo()!=null){
+                asnInfoForm.setOrderDt(currentDate);
+            }
+        } else {
+            if (busAsnInfo.getOrderNo()==null && asnInfoForm.getOrderNo()!=null){
+                asnInfoForm.setOrderDt(currentDate);
+            };
+            if (busAsnInfo.getShipDt()==null && Objects.equals(targetStatus, 3)) {
+                asnInfoForm.setShipDt(currentDate);
+            };
+            if (busAsnInfo.getReceiveDt()==null && Objects.equals(targetStatus, 4)) {
+                asnInfoForm.setReceiveDt(currentDate);
+                // 计算下个周二的日期并填入核对日期内
+                LocalDate checkDate = currentDate.with(TemporalAdjusters.next(DayOfWeek.TUESDAY));
+                asnInfoForm.setCheckDt(checkDate);
+            }
+            if (busAsnInfo.getSettlementDt()==null && Objects.equals(targetStatus, 6)) {
+                asnInfoForm.setSettlementDt(currentDate);
+            }
+        }
     }
 
-    /*
-    * @Param asnInfoForm
-    * @return void
-    * 计算老师和平台的金额
-    * */
+    /**
+     * @param asnInfoForm 任务表单对象
+     * */
     private void calculatePortion(AsnInfoForm asnInfoForm) {
         try {
             BusTechInfo busTechInfo = busTechService.getOne(
@@ -166,4 +159,17 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
             e.printStackTrace();
         }
     }
+
+    /**
+     * @param queryParams 查询参数
+     * @return void
+     * 计算老师和平台的金额
+     * */
+    @Override
+    public List<AsnInfoExportVO> listExportAsn(AsnInfoOpPageQuery queryParams) {
+        List<AsnInfoExportVO> list = this.baseMapper.listExportAsnInfo(queryParams);
+        return list;
+    }
+
+
 }

@@ -3,9 +3,11 @@ package com.youlai.system.model.query;
 import com.youlai.system.common.base.BasePageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 @Schema(description ="任务信息展示分页查询对象")
@@ -17,7 +19,7 @@ public class AsnInfoOpPageQuery extends BasePageQuery {
     @Schema(description="订单编号")
     private String orderNo; // 订单编号
 
-    @Schema(description="状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)")
+    @Schema(description="状态(0:未匹配;1:未下单;2:预付款;3:已发货;4:已收货;5:已核对;6:已结算;7.已退款;8.已流失;)")
     private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)
 
     @Schema(description="任务场景分类")
@@ -61,6 +63,12 @@ public class AsnInfoOpPageQuery extends BasePageQuery {
 
     @Schema(description="老师ID")
     private Long techId; // 老师ID
+
+    @Schema(description="应结日期")
+    private String checkDt; // 应结日期
+
+    @Schema(description="结算日期")
+    private String settlementDt; // 结算日期
 
 //    @Schema(description="老师姓名")
 //    private String techName; // 老师姓名

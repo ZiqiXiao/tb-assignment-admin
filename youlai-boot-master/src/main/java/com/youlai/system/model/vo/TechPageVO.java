@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Schema(description ="老师信息分页对象")
 @Data
@@ -21,8 +22,8 @@ public class TechPageVO {
     private String alipay;
 
     @Schema(description="入职日期")
-    private LocalDate entryDt;
+    private Date entryDt;
 
     @Schema(description="离职日期")
-    private LocalDate depDt;
+    private Date depDt;
 }

@@ -5,6 +5,7 @@ import com.alibaba.excel.annotation.format.DateTimeFormat;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 public class TechExportVO {
@@ -22,9 +23,9 @@ public class TechExportVO {
 
     @ExcelProperty(value = "入职日期")
     @DateTimeFormat("yyyy/MM/dd")
-    private LocalDate entryDt;
+    private Date entryDt;
 
     @ExcelProperty(value = "离职日期")
     @DateTimeFormat("yyyy/MM/dd")
-    private LocalDate depDt;
+    private Date depDt;
 }

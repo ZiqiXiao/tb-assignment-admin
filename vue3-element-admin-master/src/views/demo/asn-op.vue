@@ -28,7 +28,6 @@ const userStore = useUserStore();
 
 const cssCode = userStore.cssCode;
 const cssId = userStore.cssId;
-const nextAsnNo = ref<string>('');
 
 const queryParams = reactive<AsnInfoOpQuery>({
 	pageNum: 1,
@@ -55,6 +54,8 @@ const formData = reactive<AsnForm>({
 		asnPrice: -1,
 		cssId: cssId,
 		techId: 60000,
+    checkDt: undefined,
+    settlementDt: undefined,
 		consultDt: currentDate
 });
 
@@ -62,19 +63,27 @@ const rules = reactive({
 	asnNo: [{ required: true, message: "请输内部编号", trigger: "blur" }],
 	status: [{ required: true, message: "请选择状态", trigger: "blur" }],
 	asnLang: [{ required: true, message: "请输入编程语言", trigger: "blur" }],
+  orderNo: [
+    {
+      validator: (rule, value, callback) => {
+        const specialStatusValues = [2, 3, 4, 5, 6, 7];
+        if (specialStatusValues.includes(formData.status) && !value) {
+          callback(new Error('订单号不能为空'));
+        } else {
+          callback();
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
 });
-
-interface CheckedRole {
-	id?: number;
-	name?: string;
-}
-let checkedRole: CheckedRole = reactive({});
 
 /**
  * 查询
  */
 function handleQuery() {
 	loading.value = true;
+  console.log(queryParams)
 	getAsnInfoOp(queryParams)
 		.then(({ data }) => {
 			asnInfoList.value = data.list;
@@ -91,6 +100,13 @@ function resetQuery() {
 	queryFormRef.value.resetFields();
 	queryParams.pageNum = 1;
 	handleQuery();
+}
+
+/**
+ * 重置查询(不重置查询参数)
+ */
+function dirtyResetQuery() {
+  handleQuery();
 }
 
 /**
@@ -113,16 +129,15 @@ function openDialog(id?: number, asnNo?: string) {
     });
 		dialog.title = "新增订单";
 	}
-	if (id && asnNo) {
-	  dialog.title = "新增关联订单";
-	  getAsnForm(id).then(({ data }) => {
-		  Object.assign(formData, data);
-		  formData.id = undefined;
-			formData.orderNo = '';
-			formData.asnPrice = -1;
-	  });
-
-	}
+	// if (id && asnNo) {
+	//   dialog.title = "新增关联订单";
+	//   getAsnForm(id).then(({ data }) => {
+	// 	  Object.assign(formData, data);
+	// 	  formData.id = undefined;
+	// 		formData.orderNo = '';
+	// 		formData.asnPrice = -1;
+	//   });
+	// }
 }
 
 /**
@@ -143,6 +158,8 @@ function resetForm() {
 	formData.cssId = cssId;
 	formData.techId = 60000;
 	formData.consultDt = currentDate
+  formData.checkDt = undefined;
+  formData.settlementDt = undefined;
   formData.id = undefined;
 }
 
@@ -166,7 +183,7 @@ function handleSubmit() {
 					.then(() => {
 						ElMessage.success("修改成功");
 						closeDialog();
-						resetQuery();
+            dirtyResetQuery();
 					})
 					.finally(() => (loading.value = false));
 			} else {
@@ -174,7 +191,7 @@ function handleSubmit() {
 					.then(() => {
 						ElMessage.success("新增成功");
 						closeDialog();
-						resetQuery();
+            resetQuery();
 					})
 					.finally(() => (loading.value = false));
 			}
@@ -233,6 +250,14 @@ function handleClipboardSuccess() {
 * */
 function handleClipboardError() {
   ElMessageBox.alert('复制失败');
+}
+
+function getNextTuesday() {
+  const nextTuesday = new Date();
+  const currentDay = nextTuesday.getDay();
+  const daysUntilNextTuesday = (2 - currentDay + 7) % 7 || 7;
+  nextTuesday.setDate(nextTuesday.getDate() + daysUntilNextTuesday);
+  return now;
 }
 
 onMounted(() => {
@@ -344,6 +369,28 @@ onMounted(() => {
                 @keyup.enter="handleQuery"
             />
           </el-form-item>
+          <el-form-item prop="checkDt" label="应结日期">
+            <el-date-picker
+                v-model="queryParams.checkDt"
+                type="date"
+                placeholder="请选择日期"
+                clearable
+                format="YYYY年MM月DD日"
+                value-format='YYYY-MM-DD'
+                @keyup.enter="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item prop="settlementDt" label="结算日期">
+            <el-date-picker
+                v-model="queryParams.settlementDt"
+                type="date"
+                placeholder="请选择日期"
+                clearable
+                format="YYYY年MM月DD日"
+                value-format='YYYY-MM-DD'
+                @keyup.enter="handleQuery"
+            />
+          </el-form-item>
         </div>
 
 
@@ -405,10 +452,16 @@ onMounted(() => {
 		  	<el-table-column label="平台金额" prop="platPortion" width="100" />
 		  	<el-table-column label="老师金额" prop="techPortion" width="100" />
         <el-table-column label="老师Id" prop="techId" width="80" />
+        <el-table-column label="老师姓名" prop="techName" width="100" />
 		  	<el-table-column label="技术分类" prop="asnTechCat" width="100" />
 		  	<el-table-column label="编程语言" prop="asnLang" width="100" />
-		  	<el-table-column label="咨询时间" prop="consultDt" width="100" />
-				<el-table-column fixed="right" label="操作" width="250">
+		  	<el-table-column label="咨询日期" prop="consultDt" width="100" />
+        <el-table-column label="下单日期" prop="orderDt" width="100" />
+        <el-table-column label="发货日期" prop="shipDt" width="100" />
+        <el-table-column label="收货日期" prop="receiveDt" width="100" />
+        <el-table-column label="应结日期" prop="checkDt" width="100" />
+        <el-table-column label="结算日期" prop="settlementDt" width="100" />
+				<el-table-column fixed="right" label="操作" width="150">
 					<template #default="scope">
 						<el-button
 								type="primary"
@@ -418,14 +471,14 @@ onMounted(() => {
 						>
 							<i-ep-edit />编辑
 						</el-button>
-						<el-button
-								type="primary"
-								size="small"
-								link
-								@click="openDialog(scope.row.id, scope.row.asnNo)"
-						>
-							<i-ep-edit />新增关联
-						</el-button>
+<!--						<el-button-->
+<!--								type="primary"-->
+<!--								size="small"-->
+<!--								link-->
+<!--								@click="openDialog(scope.row.id, scope.row.asnNo)"-->
+<!--						>-->
+<!--							<i-ep-edit />新增关联-->
+<!--						</el-button>-->
             <el-button
                 v-clipboard:copy="generateText(scope.row)"
                 v-clipboard:success="handleClipboardSuccess"
@@ -517,43 +570,43 @@ onMounted(() => {
 
 		  <el-form-item label="任务描述" prop="asnDesc">
 				<el-input
+						v-model="formData.asnDesc"
 						type="textarea"
 						:rows="3"
-						placeholder="请输入内容"
-						v-model="formData.asnDesc">
+						placeholder="请输入内容">
 				</el-input>
 		  </el-form-item>
 
 		  <el-form-item label="任务价格" prop="asnPrice">
 			  <el-input
+					  v-model="formData.asnPrice"
 					  type="input"
-					  placeholder="请输入价格"
-					  v-model="formData.asnPrice">
+					  placeholder="请输入价格">
 			  </el-input>
 		  </el-form-item>
 
 		  <el-form-item label="老师Id" prop="techId">
 			  <el-input
+					  v-model="formData.techId"
 					  type="input"
-					  placeholder="请输入老师Id"
-					  v-model="formData.techId">
+					  placeholder="请输入老师Id">
 			  </el-input>
 		  </el-form-item>
 
 		  <el-form-item label="客服Id" prop="cssId">
 			  <el-input
+					  v-model="formData.cssId"
 					  type="input"
-					  placeholder="请输入客服Id"
-					  v-model="formData.cssId">
+					  placeholder="请输入客服Id">
 			  </el-input>
 		  </el-form-item>
 
 		  <el-form-item label="咨询日期" prop="consultDt">
 			  <el-input
+					  v-model="formData.consultDt"
 					  type="input"
-					  placeholder="formData.consultDt"
-						:disabled="true"
-					  v-model="formData.consultDt">
+						placeholder="formData.consultDt"
+					  :disabled="true">
 			  </el-input>
 		  </el-form-item>
 

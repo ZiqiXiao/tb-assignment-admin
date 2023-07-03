@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Schema(description = "任务信息表单对象")
 @Data
@@ -21,7 +22,7 @@ public class AsnInfoForm {
     @Schema(description="订单编号")
     private String orderNo; // 订单编号
 
-    @Schema(description="状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;8.已退款;)")
+    @Schema(description="状态(0:未匹配;1:未下单;2:预付款;3:已发货;4:已收货;5:已核对;6:已结算;7.已退款;8.已流失;)")
     @NotNull(message = "状态不能为空")
     private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;8.已退款;)
 

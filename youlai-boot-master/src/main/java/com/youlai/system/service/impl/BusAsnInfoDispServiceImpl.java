@@ -38,6 +38,8 @@ public class BusAsnInfoDispServiceImpl extends ServiceImpl<BusAsnInfoMapper, Bus
                         .like(StrUtil.isNotBlank(keywords), BusAsnInfo::getAsnDesc, keywords)
                         .eq(StrUtil.isNotBlank(asnTechCat), BusAsnInfo::getAsnTechCat, asnTechCat)
                         .eq(StrUtil.isNotBlank(asnLang), BusAsnInfo::getAsnLang, asnLang)
+                        .orderBy(true, false, BusAsnInfo::getAsnPrice)
+                        .orderBy(true, false, BusAsnInfo::getConsultDt)
                         .between(
                                 asnPriceLower != null && asnPriceUpper != null,
                                 BusAsnInfo::getAsnPrice,

@@ -7,6 +7,7 @@ import com.youlai.system.common.base.BaseEntity;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @TableName("bus_css_info")
@@ -15,6 +16,6 @@ public class BusCssInfo extends BaseEntity {
     private Long cssId; // 客服编号
     private String cssCode; // 客服代码
     private String cssName; // 客服姓名
-    private LocalDate entryDt; // 入职日期
-    private LocalDate depDt; // 离职日期
+    private Date entryDt; // 入职日期
+    private Date depDt; // 离职日期
 }

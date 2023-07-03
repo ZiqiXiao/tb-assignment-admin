@@ -2,11 +2,9 @@ package com.youlai.system.converter;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.youlai.system.model.bo.AsnInfoFormBO;
-import com.youlai.system.model.bo.UserFormBO;
 import com.youlai.system.model.entity.BusAsnInfo;
 import com.youlai.system.model.form.AsnInfoForm;
-import com.youlai.system.model.form.UserForm;
-import com.youlai.system.model.vo.AsnInfoDispPageVO;
+import com.youlai.system.model.vo.AsnInfoExportVO;
 import com.youlai.system.model.vo.AsnInfoOpPageVO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -14,7 +12,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface AsnInfoOpConverter {
 
-    Page<AsnInfoOpPageVO> entity2Page(Page<BusAsnInfo> page);
+//    Page<AsnInfoOpPageVO> entity2Page(Page<AsnInfoExportVO> page);
 
     AsnInfoForm bo2Form(AsnInfoFormBO bo);
 

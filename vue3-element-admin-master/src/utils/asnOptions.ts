@@ -38,9 +38,8 @@ export const asnStatusOptions = ref<OptionType[]>([
 	{label: '2：预付款', value: 2},
 	{label: '3：已发货', value: 3},
 	{label: '4：已收货', value: 4},
-	{label: '5：已交付', value: 5},
-	{label: '6：已核对', value: 6},
-	{label: '7：已结算', value: 7},
-	{label: '8：已退款', value: 8},
-	{label: '9：已流失', value: 9},
+	{label: '5：已核对', value: 5},
+	{label: '6：已结算', value: 6},
+	{label: '7：已退款', value: 7},
+	{label: '8：已流失', value: 8},
 ]);

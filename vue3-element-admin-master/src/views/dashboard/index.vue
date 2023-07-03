@@ -17,7 +17,7 @@ const total = ref(0);
 
 const queryParams = reactive<AsnInfoQuery>({
 	pageNum: 1,
-	pageSize: 10,
+	pageSize: 50,
 });
 
 const asnInfoList = ref<AsnInfoVO[]>();
@@ -49,6 +49,29 @@ function resetQuery() {
 	queryFormRef.value.resetFields();
 	queryParams.pageNum = 1;
 	handleQuery();
+}
+
+/**
+ *  价格排序
+ */
+function priceSorter(a,b){
+  const priceRange = (price) => {
+    if (price == -1) return 0;
+    if (price >= 10000) return 1;
+    if (price >= 5000) return 2;
+    if (price >= 2000) return 3;
+    if (price >= 1000) return 4;
+    if (price >= 500) return 5;
+    return 6;
+  };
+
+  if (priceRange(a.asnPrice) < priceRange(b.asnPrice)) {
+    return -1;
+  } else if (priceRange(a.asnPrice) > priceRange(b.asnPrice)) {
+    return 1;
+  } else {
+    return new Date(b.consultDt) - new Date(a.consultDt);
+  }
 }
 
 onMounted(() => {
@@ -155,7 +178,7 @@ onMounted(() => {
             <div style="white-space: pre-wrap;" v-html="scope.row.asnDesc.replace('任务描述：', '<strong>任务描述：</strong>').replace('截止日期：', '<br/><strong>截止日期：</strong>')"></div>
           </template>
         </el-table-column>
-				<el-table-column label="任务金额" prop="asnPrice" width="150">
+				<el-table-column label="任务金额" prop="asnPrice" width="150" sortable="true" :sort-method="priceSorter">
           <template #default="scope">
             <span v-if="scope.row.asnPrice == -1">报价</span>
             <span v-else-if="scope.row.asnPrice == -2">详见任务描述</span>
