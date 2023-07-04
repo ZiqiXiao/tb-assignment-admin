@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
 
 @Schema(description = "任务信息表单对象")
 @Data
@@ -59,23 +59,23 @@ public class AsnInfoForm {
 
     @Schema(description="咨询日期")
     @NotNull(message = "咨询日期不能为空")
-    private LocalDate consultDt; // 咨询日期
+    private Date consultDt; // 咨询日期
 
     @Schema(description="下单日期")
-    private LocalDate orderDt; // 下单日期
+    private Date orderDt; // 下单日期
 
     @Schema(description="发货日期")
-    private LocalDate shipDt; // 发货日期
+    private Date shipDt; // 发货日期
 
     @Schema(description="交付日期")
-    private LocalDate deliverDt; // 交付日期
+    private Date deliverDt; // 交付日期
 
     @Schema(description="收货日期")
-    private LocalDate receiveDt; // 收货日期
+    private Date receiveDt; // 收货日期
 
     @Schema(description="应结日期")
-    private LocalDate checkDt; // 应结日期
+    private Date checkDt; // 应结日期
 
     @Schema(description="结算日期")
-    private LocalDate settlementDt; // 结算日期
+    private Date settlementDt; // 结算日期
 }

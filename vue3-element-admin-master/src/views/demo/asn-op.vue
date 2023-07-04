@@ -284,7 +284,17 @@ const shortcuts = [
       return lastTuesday;
     },
   },
-]
+];
+
+// 判断今天是否是星期二
+const today = new Date();
+if (today.getDay() === 2) {
+  shortcuts.push({
+    text: '今天应结',
+    value: () => today,
+  });
+}
+
 
 function getNextTuesday() {
   const nextTuesday = new Date();

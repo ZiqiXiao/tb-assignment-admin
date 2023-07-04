@@ -140,7 +140,10 @@
         ON t1.css_id = t3.css_id
         <where>
             <if test='queryParams.keywords!=null and queryParams.keywords.trim() neq ""'>
-                (t1.asn_desc LIKE CONCAT('%',#{queryParams.keywords},'%')
+                t1.asn_desc LIKE CONCAT('%',#{queryParams.keywords},'%')
+            </if>
+            <if test='queryParams.asnNo!=null'>
+                t1.asn_no LIKE CONCAT('%',#{queryParams.asnNo},'%')
             </if>
             <if test='queryParams.status!=null'>
                 AND t1.status = #{queryParams.status}

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -118,27 +119,24 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
                 ));
         Integer currentStatus = busAsnInfo.getStatus();
         Integer targetStatus = asnInfoForm.getStatus();
-        LocalDate currentDate = LocalDate.now();
+        Date currentDate = Date.valueOf(LocalDate.now());
+        System.out.println("Current Date is" + currentDate);
         if (Objects.equals(currentStatus, targetStatus)) {
             if (busAsnInfo.getOrderNo()==null && asnInfoForm.getOrderNo()!=null){
                 asnInfoForm.setOrderDt(currentDate);
             }
         }
-        if (busAsnInfo.getOrderNo()==null && asnInfoForm.getOrderNo()!=null){
-            asnInfoForm.setOrderDt(currentDate);
-        };
         if (busAsnInfo.getShipDt()==null && Objects.equals(targetStatus, 3)) {
+            asnInfoForm.setOrderDt(currentDate);
             asnInfoForm.setShipDt(currentDate);
         };
         if (busAsnInfo.getReceiveDt()==null && Objects.equals(targetStatus, 4)) {
-            System.out.println(busAsnInfo.getShipDt());
-            System.out.println(busAsnInfo.getOrderNo());
             if (busAsnInfo.getOrderNo()==null || busAsnInfo.getShipDt()==null){
                 throw new BusinessException("请先完成发货操作");
             }
             asnInfoForm.setReceiveDt(currentDate);
             // 计算下个周二的日期并填入核对日期内
-            LocalDate checkDate = currentDate.with(TemporalAdjusters.next(DayOfWeek.TUESDAY));
+            Date checkDate = Date.valueOf(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.TUESDAY)));
             asnInfoForm.setCheckDt(checkDate);
         }
         if (busAsnInfo.getCheckDt()==null && Objects.equals(targetStatus, 5)) {
