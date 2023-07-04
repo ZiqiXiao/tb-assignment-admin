@@ -39,7 +39,7 @@ const techList = ref<TechPageVO[]>();
 const formData = reactive<TechForm>({
   techId: undefined,
   techName: "",
-  ratio: undefined,
+  ratio: 0.7,
   alipay: "",
   entryDt: new Date(),
   depDt: undefined
@@ -445,7 +445,7 @@ onMounted(() => {
 
         <el-form-item label="分成比例" prop="ratio">
           <el-select v-model="formData.ratio" placeholder="请选择">
-            <el-option label="80%" :value="0.8" />
+            <el-option label="70%" :value="0.7" />
           </el-select>
         </el-form-item>
 
