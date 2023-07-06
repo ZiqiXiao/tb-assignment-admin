@@ -7,7 +7,7 @@ import com.youlai.system.common.base.BaseEntity;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
 
 @Data
 @TableName("bus_tech_info")

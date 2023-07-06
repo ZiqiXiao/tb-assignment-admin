@@ -136,6 +136,8 @@ function resetForm() {
  * 表单提交
  */
 const handleSubmit = useThrottleFn(() => {
+  console.log(formData.techId)
+  console.log(techFormRef.value)
   techFormRef.value.validate((valid: any) => {
     if (valid) {
       const techId = formData.techId;
@@ -454,10 +456,22 @@ onMounted(() => {
         </el-form-item>
 
         <el-form-item label="入职日期" prop="entryDt">
-          <el-date-picker type="date" placeholder="选择日期" v-model="formData.entryDt" style="width: 100%;"></el-date-picker>
+          <el-date-picker
+              type="date"
+              placeholder="选择日期"
+              v-model="formData.entryDt"
+              format="YYYY年MM月DD日"
+              value-format='YYYY-MM-DD'
+              style="width: 100%;"/>
         </el-form-item>
         <el-form-item label="离职日期" prop="depDt">
-          <el-date-picker type="date" placeholder="选择日期" v-model="formData.depDt" style="width: 100%;"></el-date-picker>
+          <el-date-picker
+              type="date"
+              placeholder="选择日期"
+              v-model="formData.depDt"
+              format="YYYY年MM月DD日"
+              value-format='YYYY-MM-DD'
+              style="width: 100%;"/>
         </el-form-item>
       </el-form>
       <template #footer>

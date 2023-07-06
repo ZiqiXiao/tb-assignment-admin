@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.sql.Date;
+
 @Schema(description = "老师表单对象")
 @Data
 public class TechForm {
@@ -24,9 +26,9 @@ public class TechForm {
     private String alipay; // 支付宝账号
 
     @Schema(description="入职日期")
-    @NotBlank(message = "入职日期不能为空")
-    private String entryDt; // 入职日期
+    @NotNull(message = "入职日期不能为空")
+    private Date entryDt; // 入职日期
 
     @Schema(description="离职日期")
-    private String depDt; // 离职日期
+    private Date depDt; // 离职日期
 }

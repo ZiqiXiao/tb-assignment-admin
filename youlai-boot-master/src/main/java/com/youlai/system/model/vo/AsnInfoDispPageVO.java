@@ -3,6 +3,8 @@ package com.youlai.system.model.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.sql.Date;
+
 @Schema(description ="任务信息分页对象")
 @Data
 public class AsnInfoDispPageVO {
@@ -22,5 +24,5 @@ public class AsnInfoDispPageVO {
     private String asnLang;
 
     @Schema(description="咨询日期")
-    private String consultDt;
+    private Date consultDt;
 }
