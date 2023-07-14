@@ -25,8 +25,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +43,13 @@ public class BusAsnInfoOpServiceImpl extends ServiceImpl<BusAsnInfoMapper, BusAs
         // 查询参数
         int pageNum = queryParams.getPageNum();
         int pageSize = queryParams.getPageSize();
+        if (queryParams.getStatus() != null && !queryParams.getStatus().isEmpty()) {
+            queryParams.setStatusList(
+                    Arrays.stream(queryParams.getStatus().split(","))
+                            .map(Integer::valueOf)
+                            .collect(Collectors.toList())
+            );
+        }
         Page<AsnInfoOpPageVO> asnInfoPage = this.baseMapper.asnInfoPage(new Page<>(pageNum, pageSize), queryParams);
         System.out.println(asnInfoPage);
 

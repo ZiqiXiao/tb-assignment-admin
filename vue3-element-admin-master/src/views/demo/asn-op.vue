@@ -88,7 +88,10 @@ const rules = reactive({
  */
 function handleQuery() {
 	loading.value = true;
-  console.log(queryParams)
+  if (Array.isArray(queryParams.status)) {
+    queryParams.status = queryParams.status.join(",");
+  }
+  // console.log(queryParams)
 	getAsnInfoOp(queryParams)
 		.then(({ data }) => {
 			asnInfoList.value = data.list;
@@ -96,7 +99,10 @@ function handleQuery() {
 		})
 		.finally(() => {
 			loading.value = false;
-		});
+      if (typeof queryParams.status === 'string') {
+        queryParams.status = queryParams.status.split(",").map(Number);
+      }
+    });
 }
 /**
  * 重置查询
@@ -327,6 +333,7 @@ onMounted(() => {
 								v-model="queryParams.status"
 								placeholder="状态"
 								clearable
+                multiple
 						>
 							<el-option
 									v-for="item in asnStatusOptions"
@@ -489,6 +496,8 @@ onMounted(() => {
             <div style="white-space: pre-wrap;" v-html="scope.row.asnDesc.replace('任务描述：', '<strong>任务描述：</strong>').replace('截止日期：', '<br/><strong>截止日期：</strong>')"></div>
           </template>
         </el-table-column>
+        <el-table-column label="老师Id" prop="techId" width="80" />
+        <el-table-column label="老师姓名" prop="techName" width="100" />
 				<el-table-column label="任务金额" prop="asnPrice" width="100" >
           <template #default="scope">
             <span v-if="scope.row.asnPrice == -1">报价</span>
@@ -498,8 +507,6 @@ onMounted(() => {
         </el-table-column>
 		  	<el-table-column label="平台金额" prop="platPortion" width="100" />
 		  	<el-table-column label="老师金额" prop="techPortion" width="100" />
-        <el-table-column label="老师Id" prop="techId" width="80" />
-        <el-table-column label="老师姓名" prop="techName" width="100" />
 		  	<el-table-column label="技术分类" prop="asnTechCat" width="100" />
 		  	<el-table-column label="编程语言" prop="asnLang" width="100" />
 		  	<el-table-column label="咨询日期" prop="consultDt" width="100" />
@@ -618,6 +625,7 @@ onMounted(() => {
 		  <el-form-item label="任务描述" prop="asnDesc">
 				<el-input
 						v-model="formData.asnDesc"
+            autosize
 						type="textarea"
 						:rows="3"
 						placeholder="请输入内容">

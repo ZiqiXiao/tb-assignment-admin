@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Schema(description ="任务信息展示分页查询对象")
@@ -20,7 +21,10 @@ public class AsnInfoOpPageQuery extends BasePageQuery {
     private String orderNo; // 订单编号
 
     @Schema(description="状态(0:未匹配;1:未下单;2:预付款;3:已发货;4:已收货;5:已核对;6:已结算;7.已退款;8.已流失;)")
-    private Integer status; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)
+    private String status; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)
+
+    @Schema(description="状态(0:未匹配;1:未下单;2:预付款;3:已发货;4:已收货;5:已核对;6:已结算;7.已退款;8.已流失;)")
+    private List<Integer> statusList; // 状态(0:未匹配;1:未下单;2:预付款;3:已付款;4:已发货;5:已收货;6:已核对;7:已结算;)
 
     @Schema(description="任务场景分类")
     private String asnScnCat; // 任务场景分类
@@ -31,11 +35,11 @@ public class AsnInfoOpPageQuery extends BasePageQuery {
     @Schema(description="编程语言")
     private String asnLang; // 编程语言
 
-//    @Schema(description="任务金额上限")
-//    private Long asnPriceUpper;
-//
-//    @Schema(description="任务金额下限")
-//    private Long asnPriceLower;
+    @Schema(description="任务金额上限")
+    private Long asnPriceUpper;
+
+    @Schema(description="任务金额下限")
+    private Long asnPriceLower;
 //
 //    @Schema(description="老师金额上限")
 //    private Long techPortionUpper;

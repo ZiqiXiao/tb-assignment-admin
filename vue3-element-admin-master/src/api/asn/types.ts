@@ -16,7 +16,7 @@ export interface AsnInfoOpQuery extends PageQuery  {
 	keywords?: string;
 	asnNo?: string;
 	orderNo?: string;
-	status?: number;
+	status?: any;
 	asnTechCat?: string;
 	asnLang?: string;
 	cssId?: number;

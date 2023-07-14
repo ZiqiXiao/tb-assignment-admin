@@ -149,8 +149,11 @@
             <if test='queryParams.orderNo!=null'>
                 t1.order_no LIKE CONCAT('%',#{queryParams.orderNo},'%')
             </if>
-            <if test='queryParams.status!=null'>
-                AND t1.status = #{queryParams.status}
+            <if test='queryParams.statusList!=null and queryParams.statusList.size() > 0'>
+                AND t1.status IN
+                <foreach item="item" index="index" collection="queryParams.statusList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
             <if test='queryParams.asnScnCat!=null'>
                 AND t1.asn_scn_cat = #{queryParams.asnScnCat}
@@ -172,6 +175,12 @@
             </if>
             <if test='queryParams.settlementDt!=null'>
                 AND t1.settlement_dt = #{queryParams.settlementDt}
+            </if>
+            <if test='queryParams.asnPriceUpper!=null'>
+                AND #{queryParams.asnPriceUpper} >= t1.asn_price
+            </if>
+            <if test='queryParams.asnPriceLower!=null'>
+                AND t1.asn_price >= #{queryParams.asnPriceLower}
             </if>
         </where>
         order by t1.status asc, t1.consult_dt desc, t1.id desc
