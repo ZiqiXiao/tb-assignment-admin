@@ -37,26 +37,26 @@ public class AsnInfoExportVO {
     @ExcelProperty(value = "任务金额")
     private Float asnPrice; // 任务金额
 
-    @ExcelProperty(value = "老师金额")
-    private Float techPortion; // 老师金额
-
     @ExcelProperty(value = "平台金额")
     private Float platPortion; // 平台金额
 
-    @ExcelProperty(value = "任务描述")
-    private String asnDesc; // 任务描述
+    @ExcelProperty(value = "老师金额")
+    private Float techPortion; // 老师金额
+
+    @ExcelProperty(value = "老师姓名")
+    private String techName; // 老师姓名
+
+    @ExcelProperty(value = "支付宝")
+    private String alipay; // 支付宝
+
+    @ExcelProperty(value = "老师ID")
+    private Long techId; // 老师ID
 
     @ExcelProperty(value = "客服ID")
     private Long cssId; // 客服ID
 
     @ExcelProperty(value = "客服姓名")
     private String cssName; // 客服姓名
-
-    @ExcelProperty(value = "老师ID")
-    private Long techId; // 老师ID
-
-    @ExcelProperty(value = "老师姓名")
-    private String techName; // 老师姓名
 
     @ExcelProperty(value = "咨询日期")
     @DateTimeFormat("yyyy-MM-dd")
