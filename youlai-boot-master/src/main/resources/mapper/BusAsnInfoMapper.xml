@@ -145,6 +145,9 @@
             <if test='queryParams.asnNo!=null'>
                 t1.asn_no LIKE CONCAT('%',#{queryParams.asnNo},'%')
             </if>
+            <if test='queryParams.orderNo!=null'>
+                t1.order_no LIKE CONCAT('%',#{queryParams.orderNo},'%')
+            </if>
             <if test='queryParams.status!=null'>
                 AND t1.status = #{queryParams.status}
             </if>
